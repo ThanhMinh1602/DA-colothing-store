@@ -15,20 +15,10 @@ import 'home_controller.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
   final HomeController controller = Get.find<HomeController>();
-  final items = [
-    {
-      'imageUrl':
-          'https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/76daef16-430b-45f7-be38-b6efd69c419c/M+J+BRK+POLO+TOP.png',
-      'name': 'Jordan Brooklyn',
-      'category': 'T-Shirt',
-      'price': '\$212.99',
-      'rating': 5.0,
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
-    final items = List.generate(8, (index) => 'Product $index');
+    final items = List.generate(8, (index) => 'Sản phẩm $index');
     return GestureDetector(
       onTap: context.unfocus,
       child: Scaffold(
@@ -67,9 +57,9 @@ class HomeScreen extends StatelessWidget {
           child: ProductItem(
             imageUrl:
                 'https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/76daef16-430b-45f7-be38-b6efd69c419c/M+J+BRK+POLO+TOP.png',
-            name: 'Jordan Brooklyn',
-            category: 'T-Shirt',
-            price: '\$212.99',
+            name: 'Áo Polo Jordan Brooklyn',
+            category: 'Áo thun',
+            price: '1.290.000₫',
             rating: 5.0,
             onFavoriteTap: () {},
           ),
@@ -108,11 +98,12 @@ class HomeScreen extends StatelessWidget {
 
   /// Danh sách category ngang
   Widget _buildCategoryList() {
+    final categories = ['Tất cả', 'Áo thun', 'Quần dài'];
     return SizedBox(
       height: 34,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemCount: 3,
+        itemCount: categories.length,
         separatorBuilder: (_, __) => const SizedBox(width: 16.0),
         itemBuilder: (context, index) {
           return Container(
@@ -124,7 +115,10 @@ class HomeScreen extends StatelessWidget {
               color: AppColor.k292526,
               borderRadius: BorderRadius.circular(8.0),
             ),
-            child: CustomText('Tất cả', style: AppStyle.bodySmall12),
+            child: CustomText(
+              categories[index],
+              style: AppStyle.bodySmall12.copyWith(color: AppColor.white),
+            ),
           );
         },
       ),

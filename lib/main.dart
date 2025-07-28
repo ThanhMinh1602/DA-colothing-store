@@ -20,7 +20,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primary),
         textTheme: GoogleFonts.encodeSansTextTheme(),
+        scaffoldBackgroundColor:
+            AppColor.backgroundColor, // Background cho toàn app
       ),
+      defaultTransition: Transition.rightToLeft,
+      transitionDuration: const Duration(milliseconds: 200),
       initialRoute: AppRoutes.splash,
       getPages: AppPages.routes,
     );

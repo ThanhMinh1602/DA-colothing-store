@@ -17,7 +17,7 @@ class LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<LoginController>();
     return GestureDetector(
-      onTap: () => context.unfocus(),
+      onTap: context.unfocus,
       child: Scaffold(
         body: Center(
           child: ListView(
@@ -25,7 +25,7 @@ class LoginView extends StatelessWidget {
             padding: const EdgeInsets.all(24),
             children: [
               CustomText(
-                'Login',
+                'Đăng nhập',
                 style: AppStyle.loginTitle,
                 textAlign: TextAlign.center,
               ),
@@ -37,14 +37,14 @@ class LoginView extends StatelessWidget {
               const SizedBox(height: 16),
               CustomTextField(
                 controller: controller.passwordController,
-                hintText: 'Password',
+                hintText: 'Mật khẩu',
                 isPassword: true,
               ),
               const SizedBox(height: 24),
               Obx(
                 () => CustomButton(
                   onPressed: controller.login,
-                  btnText: 'Login',
+                  btnText: 'Đăng nhập',
                   isLoading: controller.isLoading.value,
                 ),
               ),

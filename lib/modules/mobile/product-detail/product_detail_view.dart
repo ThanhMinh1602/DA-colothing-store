@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:male_clothing_store/core/components/bottom-bar/custom_bottom_bar.dart';
 import 'package:male_clothing_store/core/components/button/custom_button.dart';
+import 'package:male_clothing_store/core/components/button/custom_outline_circle_button.dart';
+import 'package:male_clothing_store/core/components/common/quantity_stepper.dart';
 import 'package:male_clothing_store/core/components/text/custom_text.dart';
 import 'package:male_clothing_store/core/constants/app_assets.dart';
 import 'package:male_clothing_store/core/constants/app_color.dart';
@@ -130,33 +132,13 @@ class ProductDetailView extends StatelessWidget {
             ],
           ),
         ),
-        _buildQuantityButton(Icons.remove, controller.decrementQty),
-        const SizedBox(width: 12.0),
         Obx(
-          () => CustomText(
-            '${controller.quantity.value}',
-            style: AppStyle.titleMedium,
+          () => QuantityStepper(
+            value: controller.quantity.value,
+            onChanged: (val) => controller.quantity.value = val,
           ),
         ),
-        const SizedBox(width: 12.0),
-        _buildQuantityButton(Icons.add, controller.incrementQty),
       ],
-    );
-  }
-
-  Widget _buildQuantityButton(IconData icon, VoidCallback onTap) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(9999),
-      onTap: onTap,
-      child: Container(
-        width: 32.0,
-        height: 32.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(width: 1.0, color: AppColor.grey5),
-        ),
-        child: Icon(icon, size: 16.0),
-      ),
     );
   }
 
@@ -166,7 +148,6 @@ class ProductDetailView extends StatelessWidget {
     );
   }
 
-  // Size & Color selection
   Widget _buildOptionRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

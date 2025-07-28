@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:male_clothing_store/core/constants/app_assets.dart';
 import 'package:male_clothing_store/core/constants/app_color.dart';
-import 'package:male_clothing_store/modules/mobile/cart/cart_screen.dart';
+import 'package:male_clothing_store/modules/mobile/cart/cart_view.dart';
 import 'package:male_clothing_store/modules/mobile/favourite/favourite_screen.dart';
 import 'package:male_clothing_store/modules/mobile/home/home_screen.dart';
 import 'package:male_clothing_store/modules/mobile/profile/profile_screen.dart';
@@ -30,7 +30,7 @@ class MainView extends StatelessWidget {
               index: controller.tabIndex.value,
               children: [
                 HomeScreen(),
-                CartScreen(),
+                CartView(),
                 FavouriteScreen(),
                 ProfileScreen(),
               ],

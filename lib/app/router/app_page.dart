@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
 import 'package:male_clothing_store/app/router/app_routes.dart';
 import 'package:male_clothing_store/modules/mobile/cart/cart_binding.dart';
-import 'package:male_clothing_store/modules/mobile/cart/cart_screen.dart';
+import 'package:male_clothing_store/modules/mobile/cart/cart_view.dart';
+import 'package:male_clothing_store/modules/mobile/checkout/checkout_binding.dart';
+import 'package:male_clothing_store/modules/mobile/checkout/checkout_view.dart';
 import 'package:male_clothing_store/modules/mobile/favourite/favourite_binding.dart';
 import 'package:male_clothing_store/modules/mobile/favourite/favourite_screen.dart';
 import 'package:male_clothing_store/modules/mobile/forgot-pass/forgot_pass_binding.dart';
@@ -49,6 +51,11 @@ class AppPages {
       binding: ProductDetailBinding(),
     ),
     GetPage(
+      name: AppRoutes.checkout,
+      page: () => CheckoutView(),
+      binding: CheckoutBinding(),
+    ),
+    GetPage(
       name: AppRoutes.main,
       page: () => const MainView(),
       bindings: [
@@ -60,7 +67,7 @@ class AppPages {
       ],
       children: [
         GetPage(name: AppRoutes.home, page: () => HomeScreen()),
-        GetPage(name: AppRoutes.cart, page: () => const CartScreen()),
+        GetPage(name: AppRoutes.cart, page: () => const CartView()),
         GetPage(name: AppRoutes.favourite, page: () => const FavouriteScreen()),
         GetPage(name: AppRoutes.profile, page: () => const ProfileScreen()),
       ],

@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:male_clothing_store/core/constants/app_color.dart';
+import 'package:male_clothing_store/core/constants/app_style.dart';
 
 abstract class BaseController extends GetxController {
   // Loading state dùng chung
