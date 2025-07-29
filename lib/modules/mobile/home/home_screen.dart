@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:male_clothing_store/app/model/product_model.dart';
 import 'package:male_clothing_store/app/router/app_routes.dart';
 import 'package:male_clothing_store/core/components/app-bar/custom_app_bar.dart';
 import 'package:male_clothing_store/core/components/text-field/custom_text_field.dart';
@@ -18,31 +19,41 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final items = List.generate(8, (index) => 'Sản phẩm $index');
     return GestureDetector(
       onTap: context.unfocus,
       child: Scaffold(
-        appBar: CustomAppBar(),
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Obx(() {
+            final user = controller.currentUser.value;
+            return CustomAppBar(userModel: user);
+          }),
+        ),
         body: ListView(
           shrinkWrap: true,
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 24.0,
+          ).copyWith(top: 14.0),
           children: [
             _buildSearchBar(),
             const SizedBox(height: 32.0),
-            _buildCategoryList(),
-            _buildProductGrid(items),
+            Obx(() => _buildCategoryList()),
+            Obx(() => _buildProductGrid(controller.products)),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildProductGrid(List<String> items) {
+  Widget _buildProductGrid(List<ProductModel> products) {
+    if (products.isEmpty) {
+      return const Center(child: CustomText('Không có sản phẩm nào'));
+    }
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.only(top: 24.0, bottom: 120),
-      itemCount: 10,
+      itemCount: products.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 17,
@@ -50,16 +61,16 @@ class HomeScreen extends StatelessWidget {
         childAspectRatio: 0.56,
       ),
       itemBuilder: (context, index) {
+        final p = products[index];
         return GestureDetector(
           onTap: () {
-            Get.toNamed(AppRoutes.productDetail);
+            Get.toNamed(AppRoutes.productDetail, arguments: p);
           },
           child: ProductItem(
-            imageUrl:
-                'https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/76daef16-430b-45f7-be38-b6efd69c419c/M+J+BRK+POLO+TOP.png',
-            name: 'Áo Polo Jordan Brooklyn',
-            category: 'Áo thun',
-            price: '1.290.000₫',
+            imageUrl: p.imageUrl ?? "",
+            name: p.name,
+            category: p.category,
+            price: "${p.price}₫",
             rating: 5.0,
             onFavoriteTap: () {},
           ),
@@ -76,6 +87,9 @@ class HomeScreen extends StatelessWidget {
             hintText: 'Tìm kiếm sản phẩm...',
             isSearch: true,
             controller: controller.searchController,
+            onChanged: (val) {
+              controller.setKeyword(val);
+            },
           ),
         ),
         const SizedBox(width: 16.0),
@@ -84,7 +98,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  /// Nút filter với icon svg
   Widget _buildFilterButton() {
     return Container(
       padding: const EdgeInsets.all(12.0),
@@ -92,32 +105,43 @@ class HomeScreen extends StatelessWidget {
         color: AppColor.k292526,
         borderRadius: BorderRadius.circular(8.0),
       ),
-      child: SvgPicture.asset(AppAssets.setting4, color: AppColor.kFDFDFD),
+      child: SvgPicture.asset(
+        AppAssets.setting4,
+        color: AppColor.backgroundColor,
+      ), // đổi thành Icon nếu không có SVG
     );
   }
 
-  /// Danh sách category ngang
   Widget _buildCategoryList() {
-    final categories = ['Tất cả', 'Áo thun', 'Quần dài'];
+    final cats = controller.categories;
+    final selCat = controller.selectedCategory.value;
     return SizedBox(
       height: 34,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemCount: categories.length,
+        itemCount: cats.length,
         separatorBuilder: (_, __) => const SizedBox(width: 16.0),
         itemBuilder: (context, index) {
-          return Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12.0,
-              vertical: 8.0,
-            ),
-            decoration: BoxDecoration(
-              color: AppColor.k292526,
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: CustomText(
-              categories[index],
-              style: AppStyle.bodySmall12.copyWith(color: AppColor.white),
+          final cat = cats[index];
+          final selected = selCat == cat.name;
+          return GestureDetector(
+            onTap: () => controller.setCategory(cat.name),
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12.0,
+                vertical: 8.0,
+              ),
+              decoration: BoxDecoration(
+                color: selected ? AppColor.primary : AppColor.k292526,
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: CustomText(
+                cat.name,
+                style: AppStyle.bodySmall12.copyWith(
+                  color: selected ? AppColor.white : AppColor.grey3,
+                  fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
             ),
           );
         },

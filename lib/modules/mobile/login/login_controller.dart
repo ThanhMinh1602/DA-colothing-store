@@ -1,27 +1,35 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:male_clothing_store/app/router/app_routes.dart';
-import 'package:male_clothing_store/core/base/base_controller.dart'; // Import BaseController của bạn
+import 'package:male_clothing_store/core/base/base_controller.dart';
+import 'package:male_clothing_store/app/services/auth_service.dart';
 
 class LoginController extends BaseController {
+  final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void login() async {
-    showLoading();
-    await Future.delayed(const Duration(seconds: 1)); // mô phỏng API call
-    hideLoading();
+  final AuthService _authService = AuthService();
 
-    // VD kiểm tra tài khoản hợp lệ
-    if (true) {
-      goTo(AppRoutes.main);
-    } else {
-      // Thông báo lỗi (dùng showSnackbar từ base)
-      showSnackbar(
-        title: 'Đăng nhập thất bại',
-        message: 'Email hoặc mật khẩu không đúng',
-        backgroundColor: Colors.orange,
+  Future<void> login() async {
+    if (!(formKey.currentState?.validate() ?? false)) {
+      return;
+    }
+
+    unfocus();
+
+    try {
+      showLoading(message: "Đang đăng nhập...");
+      await _authService.loginWithEmail(
+        emailController.text.trim(),
+        passwordController.text,
       );
+      hideLoading();
+
+      goTo(AppRoutes.main);
+    } catch (e) {
+      hideLoading();
+      await showError(message: 'Đăng nhập thất bại, vui lòng thử lại!');
     }
   }
 

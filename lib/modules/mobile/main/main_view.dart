@@ -35,7 +35,7 @@ class MainView extends StatelessWidget {
                 ProfileScreen(),
               ],
             ),
-            // Custom bottom bar
+
             Positioned(
               bottom: 32.0,
               left: 24.0,
@@ -90,7 +90,7 @@ class MainView extends StatelessWidget {
                   : AppColor.white.withOpacity(0.6),
             ),
             const SizedBox(height: 1.0),
-            // Chấm báo active
+
             if (isActive)
               CircleAvatar(backgroundColor: AppColor.white, radius: 2.0)
             else

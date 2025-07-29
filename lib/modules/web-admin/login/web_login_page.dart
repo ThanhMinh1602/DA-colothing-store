@@ -61,7 +61,6 @@ class WebLoginPage extends StatelessWidget {
                       () => CustomButton(
                         onPressed: controller.login,
                         btnText: 'Đăng nhập',
-                        isLoading: controller.isLoading.value,
                       ),
                     ),
                   ],

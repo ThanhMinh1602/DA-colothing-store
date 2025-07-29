@@ -2,8 +2,6 @@ import 'package:get/get.dart';
 import 'package:male_clothing_store/app/router/app_routes.dart';
 import 'package:male_clothing_store/modules/mobile/cart/cart_binding.dart';
 import 'package:male_clothing_store/modules/mobile/cart/cart_view.dart';
-import 'package:male_clothing_store/modules/mobile/checkout/checkout_binding.dart';
-import 'package:male_clothing_store/modules/mobile/checkout/checkout_view.dart';
 import 'package:male_clothing_store/modules/mobile/favourite/favourite_binding.dart';
 import 'package:male_clothing_store/modules/mobile/favourite/favourite_screen.dart';
 import 'package:male_clothing_store/modules/mobile/forgot-pass/forgot_pass_binding.dart';
@@ -16,6 +14,8 @@ import 'package:male_clothing_store/modules/mobile/main/main_binding.dart';
 import 'package:male_clothing_store/modules/mobile/main/main_view.dart';
 import 'package:male_clothing_store/modules/mobile/product-detail/product_detail_binding.dart';
 import 'package:male_clothing_store/modules/mobile/product-detail/product_detail_view.dart';
+import 'package:male_clothing_store/modules/mobile/profile-edit/profile_edit_binding.dart';
+import 'package:male_clothing_store/modules/mobile/profile-edit/profile_edit_screen.dart';
 import 'package:male_clothing_store/modules/mobile/profile/profile_binding.dart';
 import 'package:male_clothing_store/modules/mobile/profile/profile_screen.dart';
 import 'package:male_clothing_store/modules/mobile/register/register_binding.dart';
@@ -62,10 +62,11 @@ class AppPages {
       binding: ProductDetailBinding(),
     ),
     GetPage(
-      name: AppRoutes.checkout,
-      page: () => CheckoutView(),
-      binding: CheckoutBinding(),
+      name: AppRoutes.profileEdit,
+      page: () => ProfileEditScreen(),
+      binding: ProfileEditBinding(),
     ),
+
     GetPage(
       name: AppRoutes.main,
       page: () => const MainView(),

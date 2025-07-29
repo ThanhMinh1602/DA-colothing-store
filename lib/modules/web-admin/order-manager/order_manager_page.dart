@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:get/get.dart';
+import 'package:male_clothing_store/app/model/order_model.dart';
+import 'package:male_clothing_store/modules/web-admin/order-manager/order_manager_controller.dart';
 import 'package:male_clothing_store/core/components/side-bar/custom_sidebar.dart';
 import 'package:male_clothing_store/core/components/text/custom_text.dart';
 import 'package:male_clothing_store/core/constants/app_color.dart';
 import 'package:male_clothing_store/core/constants/app_style.dart';
 
-class OrderModel {
-  final int id;
-  final String customerName;
-  final double total;
-  String status;
-  final DateTime createdAt;
-
-  OrderModel({
-    required this.id,
-    required this.customerName,
-    required this.total,
-    required this.status,
-    required this.createdAt,
-  });
-}
+const allStatus = [
+  'Chờ xử lý',
+  'Đã xác nhận',
+  'Đang giao',
+  'Đã giao',
+  'Đã huỷ',
+];
 
 class OrderManagerPage extends StatefulWidget {
   const OrderManagerPage({super.key});
@@ -29,42 +24,11 @@ class OrderManagerPage extends StatefulWidget {
 }
 
 class _OrderManagerPageState extends State<OrderManagerPage> {
-  // Demo data
-  List<OrderModel> orders = [
-    OrderModel(
-      id: 1240,
-      customerName: 'Nguyễn Văn A',
-      total: 689000,
-      status: 'Chờ xử lý',
-      createdAt: DateTime.now().subtract(const Duration(hours: 1)),
-    ),
-    OrderModel(
-      id: 1239,
-      customerName: 'Lê Minh B',
-      total: 520000,
-      status: 'Đã xác nhận',
-      createdAt: DateTime.now().subtract(const Duration(days: 1, hours: 2)),
-    ),
-    OrderModel(
-      id: 1238,
-      customerName: 'Trần Thị C',
-      total: 420000,
-      status: 'Đã giao',
-      createdAt: DateTime.now().subtract(const Duration(days: 2, hours: 3)),
-    ),
-  ];
-
-  final List<String> allStatus = [
-    'Chờ xử lý',
-    'Đã xác nhận',
-    'Đang giao',
-    'Đã giao',
-    'Đã huỷ',
-  ];
+  final OrderManagerController controller = Get.find<OrderManagerController>();
+  final formatter = NumberFormat.currency(locale: "vi_VN", symbol: "₫");
 
   @override
   Widget build(BuildContext context) {
-    final formatter = NumberFormat.currency(locale: "vi_VN", symbol: "₫");
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
       body: Row(
@@ -76,13 +40,11 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Tiêu đề
                   CustomText(
                     "Quản lý đơn hàng",
                     style: AppStyle.loginTitle.copyWith(fontSize: 28),
                   ),
                   const SizedBox(height: 28),
-                  // Table
                   Expanded(
                     child: Card(
                       color: AppColor.backgroundColor,
@@ -93,192 +55,189 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(18),
                         child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              // Header table
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10,
-                                  horizontal: 12,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColor.grey2,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  children: const [
-                                    Expanded(
-                                      flex: 2,
-                                      child: CustomText(
-                                        'Mã đơn',
-                                        style: AppStyle.semiBold14,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: CustomText(
-                                        'Khách hàng',
-                                        style: AppStyle.semiBold14,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: CustomText(
-                                        'Tổng tiền',
-                                        style: AppStyle.semiBold14,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: CustomText(
-                                        'Trạng thái',
-                                        style: AppStyle.semiBold14,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: CustomText(
-                                        'Ngày đặt',
-                                        style: AppStyle.semiBold14,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: CustomText(
-                                        'Thao tác',
-                                        style: AppStyle.semiBold14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Divider(
-                                height: 1,
-                                color: AppColor.borderLight,
-                              ),
-                              ...orders.map((order) {
-                                return Container(
-                                  margin: const EdgeInsets.symmetric(
-                                    vertical: 4,
-                                  ),
+                          child: Obx(
+                            () => Column(
+                              children: [
+                                // Header table
+                                Container(
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 10,
                                     horizontal: 12,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColor.kFDFDFD,
-                                    borderRadius: BorderRadius.circular(8),
+                                    color: AppColor.grey2,
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Row(
-                                    children: [
-                                      // Mã đơn
+                                    children: const [
                                       Expanded(
                                         flex: 2,
                                         child: CustomText(
-                                          order.id.toString(),
+                                          'Mã đơn',
                                           style: AppStyle.semiBold14,
                                         ),
                                       ),
-                                      // Khách hàng
                                       Expanded(
                                         flex: 3,
                                         child: CustomText(
-                                          order.customerName,
-                                          style: AppStyle.productCardTitle,
+                                          'Khách hàng',
+                                          style: AppStyle.semiBold14,
                                         ),
                                       ),
-                                      // Tổng tiền
                                       Expanded(
                                         flex: 2,
                                         child: CustomText(
-                                          formatter.format(order.total),
-                                          style: AppStyle.priceBig,
+                                          'Tổng tiền',
+                                          style: AppStyle.semiBold14,
                                         ),
                                       ),
-                                      // Trạng thái
-                                      Expanded(
-                                        flex: 2,
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 4,
-                                            horizontal: 12,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: _statusBgColor(order.status),
-                                            borderRadius: BorderRadius.circular(
-                                              16,
-                                            ),
-                                          ),
-                                          child: CustomText(
-                                            order.status,
-                                            style: AppStyle.caption.copyWith(
-                                              color: _statusTextColor(
-                                                order.status,
-                                              ),
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      // Ngày đặt
                                       Expanded(
                                         flex: 2,
                                         child: CustomText(
-                                          DateFormat(
-                                            'dd/MM/yyyy HH:mm',
-                                          ).format(order.createdAt),
-                                          style: AppStyle.bodySmall12,
+                                          'Trạng thái',
+                                          style: AppStyle.semiBold14,
                                         ),
                                       ),
-                                      // Thao tác
+                                      Expanded(
+                                        flex: 2,
+                                        child: CustomText(
+                                          'Ngày đặt',
+                                          style: AppStyle.semiBold14,
+                                        ),
+                                      ),
                                       Expanded(
                                         flex: 3,
-                                        child: Row(
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.visibility,
-                                                color: AppColor.primary,
-                                              ),
-                                              tooltip: 'Xem chi tiết',
-                                              onPressed: () =>
-                                                  _showDetailDialog(
-                                                    context,
-                                                    order,
-                                                  ),
-                                            ),
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.edit,
-                                                color: AppColor.blue,
-                                              ),
-                                              tooltip: 'Đổi trạng thái',
-                                              onPressed: () =>
-                                                  _showChangeStatusDialog(
-                                                    context,
-                                                    order,
-                                                  ),
-                                            ),
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.delete,
-                                                color: AppColor.error,
-                                              ),
-                                              tooltip: 'Xoá',
-                                              onPressed: () =>
-                                                  _showDeleteDialog(
-                                                    context,
-                                                    order,
-                                                  ),
-                                            ),
-                                          ],
+                                        child: CustomText(
+                                          'Thao tác',
+                                          style: AppStyle.semiBold14,
                                         ),
                                       ),
                                     ],
                                   ),
-                                );
-                              }).toList(),
-                            ],
+                                ),
+                                const Divider(
+                                  height: 1,
+                                  color: AppColor.borderLight,
+                                ),
+                                ...controller.orders.map((order) {
+                                  return Container(
+                                    margin: const EdgeInsets.symmetric(
+                                      vertical: 4,
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 10,
+                                      horizontal: 12,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColor.kFDFDFD,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 2,
+                                          child: CustomText(
+                                            order.id,
+                                            style: AppStyle.semiBold14,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: CustomText(
+                                            order.userId ?? '-',
+                                            style: AppStyle.productCardTitle,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: CustomText(
+                                            formatter.format(order.total),
+                                            style: AppStyle.priceBig,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 4,
+                                              horizontal: 12,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: _statusBgColor(
+                                                order.status,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                            ),
+                                            child: CustomText(
+                                              order.status,
+                                              style: AppStyle.caption.copyWith(
+                                                color: _statusTextColor(
+                                                  order.status,
+                                                ),
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: CustomText(
+                                            DateFormat(
+                                              'dd/MM/yyyy HH:mm',
+                                            ).format(order.createdAt),
+                                            style: AppStyle.bodySmall12,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.visibility,
+                                                  color: AppColor.primary,
+                                                ),
+                                                tooltip: 'Xem chi tiết',
+                                                onPressed: () =>
+                                                    _showDetailDialog(
+                                                      context,
+                                                      order,
+                                                    ),
+                                              ),
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.edit,
+                                                  color: AppColor.blue,
+                                                ),
+                                                tooltip: 'Đổi trạng thái',
+                                                onPressed: () =>
+                                                    _showChangeStatusDialog(
+                                                      context,
+                                                      order,
+                                                    ),
+                                              ),
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.delete,
+                                                  color: AppColor.error,
+                                                ),
+                                                tooltip: 'Xoá',
+                                                onPressed: () =>
+                                                    _showDeleteDialog(
+                                                      context,
+                                                      order,
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -331,10 +290,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            onPressed: () {
-              setState(() {
-                order.status = selectedStatus;
-              });
+            onPressed: () async {
+              await controller.updateOrderStatus(order.id, selectedStatus);
               Navigator.pop(ctx);
             },
             child: const CustomText('Lưu', style: AppStyle.buttonPrimary),
@@ -356,7 +313,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
           style: AppStyle.bottomSheetTitle,
         ),
         content: CustomText(
-          'Bạn chắc chắn muốn xoá đơn hàng #${order.id} của ${order.customerName}?',
+          'Bạn chắc chắn muốn xoá đơn hàng #${order.id} của ${order.userId ?? "-"}?',
           style: AppStyle.dialogMessage,
         ),
         actions: [
@@ -371,10 +328,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            onPressed: () {
-              setState(() {
-                orders.remove(order);
-              });
+            onPressed: () async {
+              await controller.deleteOrder(order.id);
               Navigator.pop(ctx);
             },
             child: const CustomText('Xoá', style: AppStyle.buttonPrimary),
@@ -395,32 +350,34 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
           'Chi tiết đơn hàng #${order.id}',
           style: AppStyle.bottomSheetTitle,
         ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomText(
-              'Khách: ${order.customerName}',
-              style: AppStyle.bodySmall12,
-            ),
-            CustomText(
-              'Tổng tiền: ${order.total.toStringAsFixed(0)} đ',
-              style: AppStyle.bodySmall12,
-            ),
-            CustomText(
-              'Trạng thái: ${order.status}',
-              style: AppStyle.bodySmall12,
-            ),
-            CustomText(
-              'Ngày đặt: ${DateFormat('dd/MM/yyyy HH:mm').format(order.createdAt)}',
-              style: AppStyle.bodySmall12,
-            ),
-            const SizedBox(height: 16),
-            const CustomText(
-              '(Có thể show thêm sản phẩm trong đơn, địa chỉ giao hàng...)',
-              style: AppStyle.caption,
-            ),
-          ],
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomText(
+                'Khách: ${order.userId ?? "-"}',
+                style: AppStyle.bodySmall12,
+              ),
+              CustomText(
+                'Tổng tiền: ${formatter.format(order.total)}',
+                style: AppStyle.bodySmall12,
+              ),
+              CustomText(
+                'Trạng thái: ${order.status}',
+                style: AppStyle.bodySmall12,
+              ),
+              CustomText(
+                'Ngày đặt: ${DateFormat('dd/MM/yyyy HH:mm').format(order.createdAt)}',
+                style: AppStyle.bodySmall12,
+              ),
+              const SizedBox(height: 16),
+              const CustomText(
+                '(Có thể show thêm sản phẩm trong đơn, địa chỉ giao hàng...)',
+                style: AppStyle.caption,
+              ),
+            ],
+          ),
         ),
         actions: [
           ElevatedButton(

@@ -6,15 +6,15 @@ class WebLoginController extends BaseController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void login() async {
-    isLoading.value = true;
+  Future<void> login() async {
+    unfocus();
+    showLoading(message: "Đang đăng nhập...");
     try {
-      // TODO: Thực hiện logic đăng nhập
-      // await Future.delayed(const Duration(seconds: 2));
-      // Sau khi login thành công thì...
-      // Get.toNamed(AppRoutes.home); // hoặc tuỳ logic của bạn
+      await showSuccess(message: "Đăng nhập thành công!");
+    } catch (e) {
+      await showError(message: "Đăng nhập thất bại, vui lòng thử lại!");
     } finally {
-      isLoading.value = false;
+      hideLoading();
     }
   }
 

@@ -1,30 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:male_clothing_store/app/model/user_model.dart';
+import 'package:male_clothing_store/app/router/app_routes.dart';
 import 'package:male_clothing_store/core/components/text/custom_text.dart';
+import 'package:male_clothing_store/core/constants/app_color.dart';
 import 'package:male_clothing_store/core/constants/app_style.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({super.key});
+  const CustomAppBar({super.key, required this.userModel});
+  final UserModel? userModel;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomText('Hello, Welcome 👋', style: AppStyle.bodySmall12),
-                SizedBox(height: 4.0),
-                CustomText('Albert Stevano', style: AppStyle.titleMedium),
+                CustomText('Xin chào 👋', style: AppStyle.bodySmall12),
+                const SizedBox(height: 4.0),
+                CustomText(
+                  userModel?.name ?? 'Người dùng',
+                  style: AppStyle.titleMedium,
+                ),
               ],
             ),
-            CircleAvatar(
-              radius: 20.0,
-              backgroundImage: NetworkImage(
-                'https://cdn2.tuoitre.vn/zoom/700_700/2019/5/8/avatar-publicitystill-h2019-1557284559744252594756-crop-15572850428231644565436.jpg',
+            GestureDetector(
+              onTap: () {
+                if (userModel != null) {
+                  Get.toNamed(AppRoutes.profileEdit, arguments: userModel);
+                }
+              },
+              child: CircleAvatar(
+                radius: 20,
+                backgroundImage:
+                    (userModel?.avatarUrl != null &&
+                        userModel!.avatarUrl!.isNotEmpty)
+                    ? NetworkImage(userModel!.avatarUrl!)
+                    : null,
+                backgroundColor: AppColor.grey2,
+                child:
+                    (userModel?.avatarUrl == null ||
+                        userModel!.avatarUrl!.isEmpty)
+                    ? const Icon(Icons.person, color: AppColor.grey4)
+                    : null,
               ),
             ),
           ],

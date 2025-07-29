@@ -2,10 +2,10 @@ class UserModel {
   final String id;
   final String name;
   final String email;
-  final String? avatarUrl; // Có thể null nếu chưa có ảnh đại diện
+  final String? avatarUrl;
   final String? phone;
   final String? address;
-  final String? role; // ví dụ: 'admin', 'customer'
+  final String? role;
 
   UserModel({
     required this.id,

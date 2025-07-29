@@ -20,15 +20,18 @@ class ProductManagerController extends BaseController {
   @override
   void onInit() {
     super.onInit();
-    // Lấy danh mục sản phẩm
-    _categoryService.getCategories().listen((data) {
-      categories.value = data;
-    }, onError: handleError);
 
-    // Lấy sản phẩm ban đầu
+    _categoryService.getCategories().listen(
+      (data) {
+        categories.value = data;
+      },
+      onError: (e) {
+        showError(message: "Không thể lấy danh mục: $e");
+      },
+    );
+
     loadProducts();
 
-    // Tự động lọc/search khi filter thay đổi
     everAll([selectedCategory, searchKeyword], (_) => loadProducts());
   }
 
@@ -39,9 +42,14 @@ class ProductManagerController extends BaseController {
           category: selectedCategory.value,
           keyword: searchKeyword.value,
         )
-        .listen((data) {
-          products.value = data;
-        }, onError: handleError);
+        .listen(
+          (data) {
+            products.value = data;
+          },
+          onError: (e) {
+            showError(message: "Không thể lấy sản phẩm: $e");
+          },
+        );
   }
 
   void onCategoryChanged(String? value) {
@@ -52,39 +60,39 @@ class ProductManagerController extends BaseController {
     searchKeyword.value = value;
   }
 
-  // Thêm
   Future<void> addProduct(ProductModel product) async {
     try {
-      showLoading();
+      showLoading(message: "Đang thêm sản phẩm...");
       await _productService.addProduct(product);
       hideLoading();
-      showSnackbar(title: 'Thành công', message: 'Đã thêm sản phẩm');
-    } catch (e, s) {
-      handleError(e, s);
+      await showSuccess(message: 'Đã thêm sản phẩm');
+    } catch (e) {
+      hideLoading();
+      await showError(message: "Thêm sản phẩm thất bại!");
     }
   }
 
-  // Sửa
   Future<void> updateProduct(String id, ProductModel product) async {
     try {
-      showLoading();
+      showLoading(message: "Đang cập nhật sản phẩm...");
       await _productService.updateProduct(id, product);
       hideLoading();
-      showSnackbar(title: 'Thành công', message: 'Đã sửa sản phẩm');
-    } catch (e, s) {
-      handleError(e, s);
+      await showSuccess(message: 'Đã sửa sản phẩm');
+    } catch (e) {
+      hideLoading();
+      await showError(message: "Sửa sản phẩm thất bại!");
     }
   }
 
-  // Xoá
   Future<void> deleteProduct(String id) async {
     try {
-      showLoading();
+      showLoading(message: "Đang xoá sản phẩm...");
       await _productService.deleteProduct(id);
       hideLoading();
-      showSnackbar(title: 'Thành công', message: 'Đã xoá sản phẩm');
-    } catch (e, s) {
-      handleError(e, s);
+      await showSuccess(message: 'Đã xoá sản phẩm');
+    } catch (e) {
+      hideLoading();
+      await showError(message: "Xoá sản phẩm thất bại!");
     }
   }
 

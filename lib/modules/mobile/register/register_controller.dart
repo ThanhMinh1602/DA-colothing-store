@@ -2,33 +2,39 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:male_clothing_store/app/router/app_routes.dart';
 import 'package:male_clothing_store/core/base/base_controller.dart';
+import 'package:male_clothing_store/app/services/auth_service.dart';
 
 class RegisterController extends BaseController {
+  final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-  void register() async {
-    showLoading();
-    await Future.delayed(const Duration(seconds: 1));
-    hideLoading();
+  final AuthService _authService = AuthService();
 
-    if (emailController.text.isNotEmpty &&
-        passwordController.text == confirmPasswordController.text &&
-        passwordController.text.length >= 6) {
-      showSnackbar(
-        title: 'Thành công',
-        message: 'Đăng ký thành công!',
-        backgroundColor: Colors.green,
+  Future<void> register() async {
+    final name = nameController.text.trim();
+    final email = emailController.text.trim();
+    final pass = passwordController.text;
+
+    if (!(formKey.currentState?.validate() ?? false)) return;
+
+    unfocus();
+
+    try {
+      showLoading(message: "Đang đăng ký...");
+      await _authService.registerWithEmail(
+        email: email,
+        password: pass,
+        name: name,
       );
+      hideLoading();
+      await showSuccess(message: 'Đăng ký thành công!');
       goTo(AppRoutes.login);
-    } else {
-      showSnackbar(
-        title: 'Lỗi',
-        message: 'Vui lòng kiểm tra lại thông tin!',
-        backgroundColor: Colors.red[400],
-      );
+    } catch (e) {
+      hideLoading();
+      await showError(message: 'Email đã tồn tại hoặc có lỗi xảy ra!');
     }
   }
 

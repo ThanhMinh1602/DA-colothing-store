@@ -1,28 +1,28 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:male_clothing_store/core/base/base_controller.dart';
+import 'package:male_clothing_store/app/services/auth_service.dart';
 
 class ForgotPassController extends BaseController {
+  final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
+  final AuthService _authService = AuthService();
 
-  void sendResetLink() async {
-    showLoading();
-    await Future.delayed(const Duration(seconds: 1));
-    hideLoading();
+  Future<void> sendResetLink() async {
+    if (!(formKey.currentState?.validate() ?? false)) return;
+    unfocus();
 
-    if (emailController.text.isNotEmpty && emailController.text.contains('@')) {
-      showSnackbar(
-        title: 'Thành công',
-        message: 'Hãy kiểm tra email để đặt lại mật khẩu!',
-        backgroundColor: Colors.green,
-      );
+    final email = emailController.text.trim();
+    try {
+      showLoading(message: 'Đang gửi email...');
+      await _authService.sendPasswordResetEmail(email);
+
+      await showSuccess(message: 'Hãy kiểm tra email để đặt lại mật khẩu!');
       goBack();
-    } else {
-      showSnackbar(
-        title: 'Lỗi',
-        message: 'Vui lòng nhập email hợp lệ!',
-        backgroundColor: Colors.red[400],
-      );
+    } catch (e) {
+      hideLoading();
+
+      await showError(message: 'Không gửi được email, vui lòng thử lại!');
     }
   }
 

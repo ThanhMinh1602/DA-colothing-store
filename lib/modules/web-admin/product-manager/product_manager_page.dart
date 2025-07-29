@@ -28,7 +28,6 @@ class ProductManagerPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Tiêu đề & filter/search
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -36,42 +35,29 @@ class ProductManagerPage extends StatelessWidget {
                         "Quản lý sản phẩm",
                         style: AppStyle.loginTitle.copyWith(fontSize: 28),
                       ),
-                      Obx(
-                        () => ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColor.primary,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 14,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            elevation: 2,
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColor.primary,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 14,
                           ),
-                          onPressed: controller.isLoading.value
-                              ? null
-                              : () => _showAddDialog(context, controller),
-                          icon: const Icon(Icons.add, color: Colors.white),
-                          label: controller.isLoading.value
-                              ? const SizedBox(
-                                  width: 18,
-                                  height: 18,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : const CustomText(
-                                  'Thêm sản phẩm',
-                                  style: AppStyle.buttonPrimary,
-                                ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 2,
+                        ),
+                        onPressed: () => _showAddDialog(context, controller),
+                        icon: const Icon(Icons.add, color: Colors.white),
+                        label: const CustomText(
+                          'Thêm sản phẩm',
+                          style: AppStyle.buttonPrimary,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 12),
-                  // Filter và search
+
                   Row(
                     children: [
                       Obx(
@@ -118,7 +104,7 @@ class ProductManagerPage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  // Table sản phẩm
+
                   Expanded(
                     child: Card(
                       color: AppColor.backgroundColor,
@@ -129,13 +115,7 @@ class ProductManagerPage extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(18),
                         child: Obx(() {
-                          final products = controller.products;
-                          if (controller.isLoading.value) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                          if (products.isEmpty) {
+                          if (controller.products.isEmpty) {
                             return const Center(
                               child: CustomText('Chưa có sản phẩm nào'),
                             );
@@ -143,7 +123,6 @@ class ProductManagerPage extends StatelessWidget {
                           return SingleChildScrollView(
                             child: Column(
                               children: [
-                                // Header
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 10,
@@ -156,30 +135,52 @@ class ProductManagerPage extends StatelessWidget {
                                   child: Row(
                                     children: const [
                                       Expanded(
-                                        flex: 2,
+                                        flex: 1,
+                                        child: CustomText(
+                                          textAlign: TextAlign.center,
+                                          'Ảnh',
+                                          style: AppStyle.semiBold14,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 3,
                                         child: CustomText(
                                           'Tên sản phẩm',
                                           style: AppStyle.semiBold14,
                                         ),
                                       ),
                                       Expanded(
-                                        flex: 2,
+                                        flex: 1,
                                         child: CustomText(
                                           'Giá',
                                           style: AppStyle.semiBold14,
                                         ),
                                       ),
                                       Expanded(
-                                        flex: 2,
+                                        flex: 1,
                                         child: CustomText(
                                           'Danh mục',
                                           style: AppStyle.semiBold14,
                                         ),
                                       ),
                                       Expanded(
-                                        flex: 2,
+                                        flex: 1,
                                         child: CustomText(
-                                          'Ảnh',
+                                          'Size',
+                                          style: AppStyle.semiBold14,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: CustomText(
+                                          'Màu sắc',
+                                          style: AppStyle.semiBold14,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: CustomText(
+                                          'Mô tả',
                                           style: AppStyle.semiBold14,
                                         ),
                                       ),
@@ -197,7 +198,7 @@ class ProductManagerPage extends StatelessWidget {
                                   height: 1,
                                   color: AppColor.borderLight,
                                 ),
-                                ...products.map((prod) {
+                                ...controller.products.map((prod) {
                                   return Container(
                                     margin: const EdgeInsets.symmetric(
                                       vertical: 4,
@@ -213,41 +214,71 @@ class ProductManagerPage extends StatelessWidget {
                                     child: Row(
                                       children: [
                                         Expanded(
-                                          flex: 2,
+                                          flex: 1,
+                                          child: prod.imageUrl == null
+                                              ? const Icon(
+                                                  Icons.image,
+                                                  size: 35,
+                                                  color: AppColor.grey3,
+                                                )
+                                              : Image.network(
+                                                  prod.imageUrl!,
+                                                  width: 60,
+                                                  height: 60,
+                                                  fit: BoxFit.fitHeight,
+                                                  alignment: Alignment.center,
+                                                ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
                                           child: CustomText(
                                             prod.name,
-                                            style: AppStyle.productCardTitle,
+                                            style: AppStyle.productCardTitle
+                                                .copyWith(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                           ),
                                         ),
                                         Expanded(
-                                          flex: 2,
+                                          flex: 1,
                                           child: CustomText(
                                             '${prod.price} đ',
-                                            style: AppStyle.priceBig,
+                                            style: AppStyle.priceBig.copyWith(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w400,
+                                            ),
                                           ),
                                         ),
                                         Expanded(
-                                          flex: 2,
+                                          flex: 1,
                                           child: CustomText(
                                             prod.category,
                                             style: AppStyle.bodySmall12,
                                           ),
                                         ),
                                         Expanded(
-                                          flex: 2,
-                                          child: prod.imageUrl == null
-                                              ? const Icon(
-                                                  Icons.image,
-                                                  size: 40,
-                                                  color: AppColor.grey3,
-                                                )
-                                              : Image.network(
-                                                  prod.imageUrl!,
-                                                  width: 100,
-                                                  height: 100,
-                                                  fit: BoxFit.fitHeight,
-                                                  alignment: Alignment.center,
-                                                ),
+                                          flex: 1,
+                                          child: CustomText(
+                                            (prod.sizes?.join(', ') ?? ''),
+                                            style: AppStyle.bodySmall12,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: CustomText(
+                                            (prod.colors?.join(', ') ?? ''),
+                                            style: AppStyle.bodySmall12,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: CustomText(
+                                            prod.description ?? '',
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: AppStyle.bodySmall12,
+                                          ),
                                         ),
                                         Expanded(
                                           flex: 1,
@@ -256,6 +287,7 @@ class ProductManagerPage extends StatelessWidget {
                                               IconButton(
                                                 icon: const Icon(
                                                   Icons.edit,
+                                                  size: 20,
                                                   color: AppColor.blue,
                                                 ),
                                                 tooltip: 'Sửa',
@@ -269,6 +301,7 @@ class ProductManagerPage extends StatelessWidget {
                                               IconButton(
                                                 icon: const Icon(
                                                   Icons.delete,
+                                                  size: 20,
                                                   color: AppColor.error,
                                                 ),
                                                 tooltip: 'Xoá',
@@ -312,7 +345,6 @@ class ProductManagerPage extends StatelessWidget {
         title: "Thêm sản phẩm mới",
         categories: controller.categories,
         onSubmit: (product) => controller.addProduct(product),
-        isLoading: controller.isLoading.value,
       ),
     );
   }
@@ -329,7 +361,6 @@ class ProductManagerPage extends StatelessWidget {
         categories: controller.categories,
         initialProduct: product,
         onSubmit: (prod) => controller.updateProduct(product.id, prod),
-        isLoading: controller.isLoading.value,
       ),
     );
   }

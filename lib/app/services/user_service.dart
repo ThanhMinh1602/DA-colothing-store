@@ -30,12 +30,12 @@ class UserService {
     });
   }
 
-  // Lấy user theo ID
-  Future<UserModel?> getUserById(String docId) async {
-    final doc = await userRef.doc(docId).get();
-    if (doc.exists) {
-      return UserModel.fromJson(doc.data() as Map<String, dynamic>, doc.id);
-    }
-    return null;
+  Stream<UserModel?> getUserByIdStream(String docId) {
+    return userRef.doc(docId).snapshots().map((doc) {
+      if (doc.exists && doc.data() != null) {
+        return UserModel.fromJson(doc.data() as Map<String, dynamic>, doc.id);
+      }
+      return null;
+    });
   }
 }

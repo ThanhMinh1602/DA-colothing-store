@@ -32,6 +32,10 @@ class _ProductDialogState extends State<ProductDialog> {
   late final TextEditingController _nameController;
   late final TextEditingController _priceController;
   late final TextEditingController _imageUrlController;
+  late final TextEditingController _sizesController;
+  late final TextEditingController _colorsController;
+  late final TextEditingController _descriptionController;
+
   String? _selectedCategory;
   String _imagePreview = '';
 
@@ -42,11 +46,21 @@ class _ProductDialogState extends State<ProductDialog> {
       text: widget.initialProduct?.name ?? "",
     );
     _priceController = TextEditingController(
-      text: widget.initialProduct?.price?.toString() ?? "",
+      text: widget.initialProduct?.price.toString() ?? "",
     );
     _imageUrlController = TextEditingController(
       text: widget.initialProduct?.imageUrl ?? "",
     );
+    _sizesController = TextEditingController(
+      text: widget.initialProduct?.sizes?.join(", ") ?? '',
+    );
+    _colorsController = TextEditingController(
+      text: widget.initialProduct?.colors?.join(", ") ?? '',
+    );
+    _descriptionController = TextEditingController(
+      text: widget.initialProduct?.description ?? '',
+    );
+
     _selectedCategory = widget.initialProduct?.category;
     _imagePreview = widget.initialProduct?.imageUrl ?? '';
   }
@@ -56,6 +70,11 @@ class _ProductDialogState extends State<ProductDialog> {
     _nameController.dispose();
     _priceController.dispose();
     _imageUrlController.dispose();
+
+    _sizesController.dispose();
+    _colorsController.dispose();
+    _descriptionController.dispose();
+
     super.dispose();
   }
 
@@ -88,6 +107,7 @@ class _ProductDialogState extends State<ProductDialog> {
               DropdownButtonFormField<String>(
                 value: _selectedCategory,
                 isExpanded: true,
+
                 items: widget.categories.map((cat) {
                   return DropdownMenuItem(
                     value: cat.name,
@@ -97,7 +117,16 @@ class _ProductDialogState extends State<ProductDialog> {
                 onChanged: (value) {
                   setState(() => _selectedCategory = value);
                 },
-                decoration: const InputDecoration(labelText: 'Danh mục'),
+                decoration: InputDecoration(
+                  hintStyle: AppStyle.hintAction,
+                  hintText: 'Chọn danh mục',
+                  filled: true,
+                  fillColor: AppColor.grey6,
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
                 validator: AppValidator.requiredDropdown,
               ),
               const SizedBox(height: 12),
@@ -131,6 +160,24 @@ class _ProductDialogState extends State<ProductDialog> {
                     ),
                   ),
                 ),
+              const SizedBox(height: 12),
+              CustomTextField(
+                controller: _sizesController,
+                hintText: 'Các size (vd: S, M, L, XL)',
+                validator: AppValidator.required,
+              ),
+              const SizedBox(height: 12),
+              CustomTextField(
+                controller: _colorsController,
+                hintText: 'Các màu sắc (vd: Đỏ, Xanh, Đen)',
+                validator: AppValidator.required,
+              ),
+              const SizedBox(height: 12),
+              CustomTextField(
+                controller: _descriptionController,
+                hintText: 'Mô tả sản phẩm',
+                maxLines: 5,
+              ),
             ],
           ),
         ),
@@ -161,8 +208,20 @@ class _ProductDialogState extends State<ProductDialog> {
                         imageUrl: _imageUrlController.text.trim().isEmpty
                             ? null
                             : _imageUrlController.text.trim(),
+                        sizes: _sizesController.text
+                            .split(',')
+                            .map((s) => s.trim())
+                            .where((s) => s.isNotEmpty)
+                            .toList(),
+                        colors: _colorsController.text
+                            .split(',')
+                            .map((c) => c.trim())
+                            .where((c) => c.isNotEmpty)
+                            .toList(),
+                        description: _descriptionController.text.trim(),
                       ),
                     );
+
                     Navigator.pop(context);
                   }
                 },

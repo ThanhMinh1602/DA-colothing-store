@@ -8,6 +8,7 @@ import 'package:male_clothing_store/core/components/text/custom_text.dart';
 import 'package:male_clothing_store/core/constants/app_color.dart';
 import 'package:male_clothing_store/core/constants/app_style.dart';
 import 'package:male_clothing_store/core/extension/build_context_extension.dart';
+import 'package:male_clothing_store/core/utils/validate_utils.dart';
 import 'login_controller.dart';
 
 class LoginView extends StatelessWidget {
@@ -20,35 +21,35 @@ class LoginView extends StatelessWidget {
       onTap: context.unfocus,
       child: Scaffold(
         body: Center(
-          child: ListView(
-            shrinkWrap: true,
-            padding: const EdgeInsets.all(24),
-            children: [
-              CustomText(
-                'Đăng nhập',
-                style: AppStyle.loginTitle,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              CustomTextField(
-                controller: controller.emailController,
-                hintText: 'Email',
-              ),
-              const SizedBox(height: 16),
-              CustomTextField(
-                controller: controller.passwordController,
-                hintText: 'Mật khẩu',
-                isPassword: true,
-              ),
-              const SizedBox(height: 24),
-              Obx(
-                () => CustomButton(
-                  onPressed: controller.login,
-                  btnText: 'Đăng nhập',
-                  isLoading: controller.isLoading.value,
+          child: Form(
+            key: controller.formKey,
+            child: ListView(
+              shrinkWrap: true,
+              padding: const EdgeInsets.all(24),
+              children: [
+                CustomText(
+                  'Đăng nhập',
+                  style: AppStyle.loginTitle,
+                  textAlign: TextAlign.center,
                 ),
-              ),
-            ],
+                const SizedBox(height: 24),
+                CustomTextField(
+                  controller: controller.emailController,
+                  hintText: 'Email',
+                  validator: (value) =>
+                      AppValidator.required(value) ?? AppValidator.email(value),
+                ),
+                const SizedBox(height: 16),
+                CustomTextField(
+                  controller: controller.passwordController,
+                  hintText: 'Mật khẩu',
+                  isPassword: true,
+                  validator: AppValidator.password,
+                ),
+                const SizedBox(height: 24),
+                CustomButton(onPressed: controller.login, btnText: 'Đăng nhập'),
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: CustomBottomBar(

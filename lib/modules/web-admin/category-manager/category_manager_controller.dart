@@ -6,51 +6,55 @@ import 'package:male_clothing_store/app/model/category_model.dart';
 class CategoryManagerController extends BaseController {
   final CategoryService _service = CategoryService();
 
-  // Danh sách danh mục realtime
   final categories = <CategoryModel>[].obs;
 
   @override
   void onInit() {
     super.onInit();
-    // Lắng nghe Firestore realtime
-    _service.getCategories().listen((data) {
-      categories.value = data;
-    }, onError: handleError);
+
+    _service.getCategories().listen(
+      (data) {
+        categories.value = data;
+      },
+      onError: (e) {
+        showError(message: "Không thể lấy danh mục: $e");
+      },
+    );
   }
 
-  // Thêm
   Future<void> addCategory(String name) async {
     try {
-      showLoading();
+      showLoading(message: "Đang thêm danh mục...");
       await _service.addCategory(name);
       hideLoading();
-      showSnackbar(title: 'Thành công', message: 'Đã thêm danh mục');
-    } catch (e, s) {
-      handleError(e, s);
+      await showSuccess(message: 'Đã thêm danh mục');
+    } catch (e) {
+      hideLoading();
+      await showError(message: "Thêm danh mục thất bại!");
     }
   }
 
-  // Sửa
   Future<void> updateCategory(String id, String name) async {
     try {
-      showLoading();
+      showLoading(message: "Đang sửa danh mục...");
       await _service.updateCategory(id, name);
       hideLoading();
-      showSnackbar(title: 'Thành công', message: 'Đã sửa danh mục');
-    } catch (e, s) {
-      handleError(e, s);
+      await showSuccess(message: 'Đã sửa danh mục');
+    } catch (e) {
+      hideLoading();
+      await showError(message: "Sửa danh mục thất bại!");
     }
   }
 
-  // Xoá
   Future<void> deleteCategory(String id) async {
     try {
-      showLoading();
+      showLoading(message: "Đang xoá danh mục...");
       await _service.deleteCategory(id);
       hideLoading();
-      showSnackbar(title: 'Thành công', message: 'Đã xoá danh mục');
-    } catch (e, s) {
-      handleError(e, s);
+      await showSuccess(message: 'Đã xoá danh mục');
+    } catch (e) {
+      hideLoading();
+      await showError(message: "Xoá danh mục thất bại!");
     }
   }
 }

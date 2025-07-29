@@ -7,10 +7,22 @@ import 'package:male_clothing_store/app/router/app_routes.dart';
 import 'package:male_clothing_store/core/constants/app_color.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:male_clothing_store/firebase_options.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  EasyLoading.instance
+    ..loadingStyle = EasyLoadingStyle.dark
+    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    ..maskColor = Colors.black.withOpacity(0.2)
+    ..backgroundColor = Colors.white
+    ..indicatorColor = AppColor.primary
+    ..textColor = AppColor.primary
+    ..userInteractions = false
+    ..dismissOnTap = false;
+
   runApp(
     GetMaterialApp(
       title: 'NamWear',
@@ -24,6 +36,8 @@ void main() async {
       transitionDuration: const Duration(milliseconds: kIsWeb ? 0 : 200),
       initialRoute: kIsWeb ? WebRouter.dashboard : AppRoutes.splash,
       getPages: kIsWeb ? WebPage.routes : AppPages.routes,
+
+      builder: EasyLoading.init(),
     ),
   );
 }

@@ -4,6 +4,9 @@ class ProductModel {
   double price;
   String category;
   String? imageUrl;
+  String? description;
+  List<String>? colors; // Thêm màu sắc
+  List<String>? sizes; // Thêm size
 
   ProductModel({
     required this.id,
@@ -11,6 +14,9 @@ class ProductModel {
     required this.price,
     required this.category,
     this.imageUrl,
+    this.description,
+    this.colors,
+    this.sizes,
   });
 
   // fromJson (Firestore map)
@@ -23,6 +29,9 @@ class ProductModel {
           : (json['price'] ?? 0.0),
       category: json['category'] ?? '',
       imageUrl: json['imageUrl'],
+      description: json['description'],
+      colors: (json['colors'] as List?)?.map((e) => e.toString()).toList(),
+      sizes: (json['sizes'] as List?)?.map((e) => e.toString()).toList(),
     );
   }
 
@@ -33,6 +42,9 @@ class ProductModel {
       'price': price,
       'category': category,
       'imageUrl': imageUrl,
+      'description': description,
+      'colors': colors,
+      'sizes': sizes,
     };
   }
 }

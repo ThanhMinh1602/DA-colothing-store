@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:male_clothing_store/app/model/product_model.dart';
 import 'package:male_clothing_store/core/components/bottom-bar/custom_bottom_bar.dart';
 import 'package:male_clothing_store/core/components/button/custom_button.dart';
-import 'package:male_clothing_store/core/components/button/custom_outline_circle_button.dart';
 import 'package:male_clothing_store/core/components/common/quantity_stepper.dart';
 import 'package:male_clothing_store/core/components/text/custom_text.dart';
 import 'package:male_clothing_store/core/constants/app_assets.dart';
@@ -18,16 +18,18 @@ class ProductDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ProductModel product = Get.arguments as ProductModel;
+
     return Scaffold(
       backgroundColor: AppColor.white,
       body: ListView(
         padding: EdgeInsets.all(24.0).copyWith(top: context.paddingTop + 24.0),
         children: [
-          _buildImageSection(),
+          _buildImageSection(product.imageUrl),
           const SizedBox(height: 24),
-          _buildTitleAndRating(),
+          _buildTitleAndRating(product),
           const SizedBox(height: 12),
-          _buildDescription(),
+          _buildDescription(product.description),
           Divider(height: 32.0, color: AppColor.grey6),
           _buildOptionRow(),
         ],
@@ -36,7 +38,7 @@ class ProductDetailView extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: CustomButton(
-            onPressed: controller.addToCart,
+            onPressed: () => controller.addToCart(product),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -47,12 +49,13 @@ class ProductDetailView extends StatelessWidget {
                 ),
                 const SizedBox(width: 8.0),
                 CustomText(
-                  'Add to Cart | \$162.99',
+                  'Add to Cart | ${product.price}₫',
                   style: AppStyle.buttonText,
                 ),
                 const SizedBox(width: 4.0),
+
                 CustomText(
-                  '\$190.99',
+                  '${'product.oldPrice'}₫',
                   style: AppStyle.bodySmall10.copyWith(
                     color: AppColor.kFDFDFD,
                     decoration: TextDecoration.lineThrough,
@@ -66,17 +69,19 @@ class ProductDetailView extends StatelessWidget {
     );
   }
 
-  // Top image + back & favorite
-  Widget _buildImageSection() {
+  Widget _buildImageSection(String? imageUrl) {
     return Stack(
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(16.0),
           child: Image.network(
+            imageUrl ?? "",
             fit: BoxFit.cover,
             alignment: Alignment.topCenter,
             width: double.infinity,
-            'https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/76daef16-430b-45f7-be38-b6efd69c419c/M+J+BRK+POLO+TOP.png',
+            height: 300,
+            errorBuilder: (context, error, stackTrace) =>
+                const Center(child: Icon(Icons.broken_image)),
           ),
         ),
         Positioned(
@@ -90,7 +95,12 @@ class ProductDetailView extends StatelessWidget {
                 icon: AppAssets.arrowLeft,
                 onTap: () => Get.back(),
               ),
-              _buildCircleIcon(icon: AppAssets.heart, onTap: () {}),
+              _buildCircleIcon(
+                icon: AppAssets.heart,
+                isActive: controller.isFavorite.value,
+                onTap: controller.toggleFavorite,
+                activeColor: Colors.red,
+              ),
             ],
           ),
         ),
@@ -98,8 +108,7 @@ class ProductDetailView extends StatelessWidget {
     );
   }
 
-  // Title, rating, quantity control
-  Widget _buildTitleAndRating() {
+  Widget _buildTitleAndRating(ProductModel product) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -107,7 +116,7 @@ class ProductDetailView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CustomText('Light Dress Bless', style: AppStyle.headingLarge),
+              CustomText(product.name, style: AppStyle.headingLarge),
               const SizedBox(height: 4.0),
               Row(
                 children: [
@@ -115,11 +124,11 @@ class ProductDetailView extends StatelessWidget {
                   const SizedBox(width: 8.0),
                   RichText(
                     text: TextSpan(
-                      text: '5.0',
+                      text: ("5.0 "),
                       style: AppStyle.bodySmall12,
                       children: [
                         TextSpan(
-                          text: ' (7.932 reviews)',
+                          text: '100 reviews)',
                           style: AppStyle.bodySmall12.copyWith(
                             color: Colors.blueAccent,
                           ),
@@ -142,9 +151,10 @@ class ProductDetailView extends StatelessWidget {
     );
   }
 
-  Widget _buildDescription() {
+  Widget _buildDescription(String? description) {
     return CustomText(
-      'Its simple and elegant shape makes it perfect for those of you who like you who want minimalist clothes. Read More...',
+      description ??
+          'Its simple and elegant shape makes it perfect for those of you who like minimalist clothes.',
     );
   }
 
@@ -240,7 +250,6 @@ class ProductDetailView extends StatelessWidget {
     );
   }
 
-  // Nút icon tròn (back/favorite)
   Widget _buildCircleIcon({
     required String icon,
     VoidCallback? onTap,

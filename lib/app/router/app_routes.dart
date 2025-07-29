@@ -10,6 +10,7 @@ class AppRoutes {
   static const productDetail = '/main/home/product-detail';
   static const cart = '/main/cart';
   static const profile = '/main/profile';
+  static const profileEdit = '/main/profile/edit';
   static const favourite = '/main/favourite';
 }
 
