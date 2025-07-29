@@ -22,6 +22,17 @@ import 'package:male_clothing_store/modules/mobile/register/register_binding.dar
 import 'package:male_clothing_store/modules/mobile/register/register_view.dart';
 import 'package:male_clothing_store/modules/mobile/splash/splash_binding.dart';
 import 'package:male_clothing_store/modules/mobile/splash/splash_view.dart';
+import 'package:male_clothing_store/modules/web-admin/category-manager/category_manager_binding.dart';
+import 'package:male_clothing_store/modules/web-admin/category-manager/category_manager_page.dart';
+import 'package:male_clothing_store/modules/web-admin/dash-board/dash_board_binding.dart';
+import 'package:male_clothing_store/modules/web-admin/dash-board/dash_board_page.dart';
+import 'package:male_clothing_store/modules/web-admin/login/web_login_binding.dart';
+import 'package:male_clothing_store/modules/web-admin/login/web_login_page.dart';
+import 'package:male_clothing_store/modules/web-admin/order-manager/order_manager_binding.dart';
+import 'package:male_clothing_store/modules/web-admin/order-manager/order_manager_controller.dart';
+import 'package:male_clothing_store/modules/web-admin/order-manager/order_manager_page.dart';
+import 'package:male_clothing_store/modules/web-admin/product-manager/product_manager_binding.dart';
+import 'package:male_clothing_store/modules/web-admin/product-manager/product_manager_page.dart';
 
 class AppPages {
   static final routes = [
@@ -71,6 +82,41 @@ class AppPages {
         GetPage(name: AppRoutes.favourite, page: () => const FavouriteScreen()),
         GetPage(name: AppRoutes.profile, page: () => const ProfileScreen()),
       ],
+    ),
+  ];
+}
+
+class WebPage {
+  static final routes = [
+    // Login page
+    GetPage(
+      name: WebRouter.login,
+      page: () => WebLoginPage(),
+      binding: WebLoginBinding(),
+    ),
+
+    // Main shell page (bao gồm sidebar/header)
+    GetPage(
+      name: WebRouter.dashboard,
+      page: () => DashBoardPage(),
+      binding: DashBoardBinding(),
+    ),
+    // Product Manager
+    GetPage(
+      name: WebRouter.productManager,
+      page: () => ProductManagerPage(),
+      binding: ProductManagerBinding(),
+    ),
+    // Category Manager
+    GetPage(
+      name: WebRouter.categoryManager,
+      page: () => CategoryManagerPage(),
+      binding: CategoryManagerBinding(),
+    ),
+    GetPage(
+      name: WebRouter.orderManager,
+      page: () => OrderManagerPage(),
+      binding: OrderManagerBinding(),
     ),
   ];
 }

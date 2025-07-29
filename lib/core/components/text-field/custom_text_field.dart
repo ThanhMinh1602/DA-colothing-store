@@ -4,21 +4,25 @@ import 'package:male_clothing_store/core/constants/app_assets.dart';
 import 'package:male_clothing_store/core/constants/app_color.dart';
 
 class CustomTextField extends StatefulWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String? hintText;
   final bool isPassword;
   final bool isSearch;
   final TextStyle? textStyle;
   final TextInputType? keyboardType;
+  final Function(String)? onChanged;
+  final String? Function(String?)? validator;
 
   const CustomTextField({
     super.key,
-    required this.controller,
+    this.controller,
     this.hintText,
     this.isPassword = false,
     this.textStyle,
     this.keyboardType,
     this.isSearch = false,
+    this.onChanged,
+    this.validator,
   });
 
   @override
@@ -40,6 +44,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
       height: 48,
       child: TextFormField(
         controller: widget.controller,
+        onChanged: widget.onChanged,
+        validator: widget.validator,
         obscureText: widget.isPassword ? _obscureText : false,
         style: widget.textStyle ?? const TextStyle(fontSize: 14),
         keyboardType: widget.keyboardType,

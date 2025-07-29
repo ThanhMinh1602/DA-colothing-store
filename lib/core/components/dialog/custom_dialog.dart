@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:male_clothing_store/core/components/text/custom_text.dart';
 import 'package:male_clothing_store/core/constants/app_color.dart';
 import 'package:male_clothing_store/core/constants/app_style.dart';
 
@@ -52,5 +53,37 @@ class CustomDialog {
       ),
     );
     return result == true;
+  }
+
+  static Future<bool?> showDeleteConfirmDialog(
+    BuildContext context, {
+    required String title,
+    required String message,
+  }) {
+    return showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColor.dialogBg,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        title: CustomText(title, style: AppStyle.bottomSheetTitle),
+        content: CustomText(message, style: AppStyle.dialogMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const CustomText('Huỷ', style: AppStyle.hintAction),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColor.error,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const CustomText('Xoá', style: AppStyle.buttonPrimary),
+          ),
+        ],
+      ),
+    );
   }
 }

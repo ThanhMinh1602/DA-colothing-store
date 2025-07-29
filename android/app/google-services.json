@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "468268824625",
+    "project_id": "male-store-ab1d1",
+    "storage_bucket": "male-store-ab1d1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:468268824625:android:701d785a4fedde51523d10",
+        "android_client_info": {
+          "package_name": "com.example.male_clothing_store"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuvLu6ITubDlTF_mHutAWO0S19enlsOhA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

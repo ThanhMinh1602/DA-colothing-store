@@ -12,3 +12,28 @@ class AppRoutes {
   static const profile = '/main/profile';
   static const favourite = '/main/favourite';
 }
+
+class WebRouter {
+  // Auth
+  static const login = '/login';
+  // Dashboard
+  static const dashboard = '/dashboard';
+
+  // Product Management
+  static const productManager = '/products';
+  static const productCreate = '/products/create';
+  static const productEdit = '/products/edit/:id'; // :id là tham số sản phẩm
+
+  // Category Management
+  static const categoryManager = '/categories';
+  static const categoryCreate = '/categories/create';
+  static const categoryEdit = '/categories/edit/:id';
+
+  // Order Management
+  static const orderManager = '/orders';
+  static const orderDetail = '/orders/:id';
+
+  // Customer Management (tuỳ bạn có làm không)
+  static const customerManager = '/customers';
+  static const customerDetail = '/customers/:id';
+}

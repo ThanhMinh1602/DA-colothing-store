@@ -48,4 +48,49 @@ class AppColor {
     Color(0xFF292526),
     Color(0xFF3B3836),
   ];
+
+  // === MÀU BỔ SUNG SẮP DÙNG ===
+
+  // Xanh lá shop (dùng cho thành công, thống kê doanh thu)
+  static const Color green = Color(0xff1DB954);
+  static const Color lightGreen = Color(0xffE6F4EA);
+
+  // Vàng tươi (dùng cho đánh giá/rating/nhấn nổi)
+  static const Color yellow = Color(0xffFFD600);
+  static const Color lightYellow = Color(0xffFFF9E1);
+
+  // Accent (nhấn đặc biệt, dùng cho nút nổi bật)
+  static const Color accent = Color(0xffFF6F00);
+
+  // Màu text phụ/disabled
+  static const Color textDisabled = Color(0xffBDBDBD);
+  static const Color textSecondary = Color(0xff757575);
+
+  // Xám border phụ (nét mảnh)
+  static const Color borderLight = Color(0xffF0F0F0);
+
+  // Xám nền item
+  static const Color greyItemBg = Color(0xffF7F7F7);
+
+  // Màu cho tag sale
+  static const Color saleRed = Color(0xffFF3B30);
+  static const Color saleBg = Color(0xffFFF2F0);
+
+  // Màu cho tag mới
+  static const Color newTag = Color(0xff00C853);
+  static const Color newTagBg = Color(0xffE9FBE5);
+
+  // Thêm gradient phụ nếu bạn dùng (background section, nút)
+  static const List<Color> gradientSecondary = [
+    Color(0xffFFD600),
+    Color(0xffFFA726),
+  ];
+  static const List<Color> gradientBlue = [
+    Color(0xff1976D2),
+    Color(0xff64B5F6),
+  ];
+  static const List<Color> gradientGreen = [
+    Color(0xff1DB954),
+    Color(0xff43E97B),
+  ];
 }
