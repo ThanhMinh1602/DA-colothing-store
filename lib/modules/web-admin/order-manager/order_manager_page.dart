@@ -37,6 +37,117 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                     style: AppStyle.loginTitle.copyWith(fontSize: 28),
                   ),
                   const SizedBox(height: 28),
+
+                  Row(
+                    children: [
+                      Obx(
+                        () => DropdownButton<String>(
+                          value: controller.selectedStatus.value,
+                          hint: const CustomText(
+                            'Lọc theo trạng thái',
+                            style: AppStyle.bodySmall12,
+                          ),
+                          isExpanded: false,
+                          icon: const Icon(
+                            Icons.filter_list,
+                            color: AppColor.primary,
+                          ),
+                          dropdownColor: AppColor.dialogBg,
+                          underline: const SizedBox(),
+                          onChanged: (String? newValue) {
+                            controller.filterByStatus(newValue);
+                          },
+                          items: [
+                            const DropdownMenuItem(
+                              value: null,
+                              child: CustomText(
+                                'Tất cả trạng thái',
+                                style: AppStyle.bodySmall12,
+                              ),
+                            ),
+                            ...OrderStatus.values.map(
+                              (status) => DropdownMenuItem<String>(
+                                value: status.value,
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: status.bgColor,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: CustomText(
+                                    status.title,
+                                    style: AppStyle.caption.copyWith(
+                                      color: status.textColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+
+                      ElevatedButton(
+                        onPressed: () async {
+                          final DateTimeRange? picked =
+                              await showDateRangePicker(
+                                context: context,
+                                firstDate: DateTime(2020),
+                                lastDate: DateTime.now(),
+                                initialEntryMode:
+                                    DatePickerEntryMode.calendarOnly,
+                                builder: (context, child) {
+                                  return Center(
+                                    child: SizedBox(
+                                      width: 500,
+                                      height: 550,
+                                      child: child,
+                                    ),
+                                  );
+                                },
+                              );
+                          if (picked != null) {
+                            controller.filterByDateRange(picked);
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColor.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: CustomText(
+                          'Lọc theo ngày',
+                          style: AppStyle.caption.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          controller.clearDateRangeFilter();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColor.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: CustomText(
+                          'Xem tất cả ngày',
+                          style: AppStyle.caption.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
                   Expanded(
                     child: Card(
                       color: AppColor.backgroundColor,
@@ -50,7 +161,6 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                           child: Obx(
                             () => Column(
                               children: [
-                                // Header table
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 10,
@@ -105,188 +215,171 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                                   height: 1,
                                   color: AppColor.borderLight,
                                 ),
-                                ...controller.orders
-                                    .asMap()
-                                    .map((index, order) {
-                                      return MapEntry(
-                                        index,
-                                        Container(
-                                          margin: const EdgeInsets.symmetric(
-                                            vertical: 4,
-                                          ),
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 10,
-                                            horizontal: 12,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: AppColor.kFDFDFD,
-                                            borderRadius: BorderRadius.circular(
-                                              8,
+                                ...controller.filteredOrders.asMap().map((
+                                  index,
+                                  order,
+                                ) {
+                                  return MapEntry(
+                                    index,
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                        vertical: 4,
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 10,
+                                        horizontal: 12,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppColor.kFDFDFD,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Row(
+                                        spacing: 10,
+                                        children: [
+                                          Expanded(
+                                            flex: 1,
+                                            child: CustomText(
+                                              '${index + 1}',
+                                              style: AppStyle.semiBold14,
                                             ),
                                           ),
-                                          child: Row(
-                                            spacing: 10,
-                                            children: [
-                                              // STT
-                                              Expanded(
-                                                flex: 1,
-                                                child: CustomText(
-                                                  '${index + 1}',
+
+                                          Expanded(
+                                            flex: 4,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                CustomText(
+                                                  '#${order.id}',
                                                   style: AppStyle.semiBold14,
                                                 ),
+                                                CustomText(
+                                                  'Ngày đặt: ${DateFormat('dd/MM/yyyy').format(order.createdAt)}',
+                                                  style: AppStyle.bodySmall12,
+                                                ),
+                                                CustomText(
+                                                  'Tên người đặt: ${order.receiverName}',
+                                                  style: AppStyle.bodySmall12,
+                                                ),
+                                                CustomText(
+                                                  'SĐT: ${order.receiverPhone}',
+                                                  style: AppStyle.bodySmall12,
+                                                ),
+                                                CustomText(
+                                                  'Địa chỉ: ${order.shippingAddress}',
+                                                  style: AppStyle.bodySmall12,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+
+                                          Expanded(
+                                            flex: 2,
+                                            child: CustomText(
+                                              formatter.format(order.total),
+                                              style: AppStyle.priceBig.copyWith(
+                                                fontSize: 12,
                                               ),
-                                              // Mã đơn hàng và thông tin người nhận
-                                              Expanded(
-                                                flex: 4,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                            ),
+                                          ),
+
+                                          Expanded(
+                                            flex: 5,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: order.items.map((item) {
+                                                return Row(
                                                   children: [
-                                                    CustomText(
-                                                      '#${order.id}',
-                                                      style:
-                                                          AppStyle.semiBold14,
+                                                    Image.network(
+                                                      item.productImage,
+                                                      width: 30,
+                                                      height: 30,
+                                                      fit: BoxFit.cover,
                                                     ),
+                                                    const SizedBox(width: 8),
                                                     CustomText(
-                                                      'Ngày đặt: ${DateFormat('dd/MM/yyyy').format(order.createdAt)}',
-                                                      style:
-                                                          AppStyle.bodySmall12,
-                                                    ),
-                                                    CustomText(
-                                                      'Tên người đặt: ${order.receiverName}',
+                                                      '${item.productName} (${item.size})',
                                                       style:
                                                           AppStyle.bodySmall12,
                                                     ),
+                                                    const SizedBox(width: 8),
                                                     CustomText(
-                                                      'SĐT: ${order.receiverPhone}',
-                                                      style:
-                                                          AppStyle.bodySmall12,
-                                                    ),
-                                                    CustomText(
-                                                      'Địa chỉ: ${order.shippingAddress}',
+                                                      'x${item.quantity}',
                                                       style:
                                                           AppStyle.bodySmall12,
                                                     ),
                                                   ],
-                                                ),
-                                              ),
-                                              // Thành tiền
-                                              Expanded(
-                                                flex: 2,
-                                                child: CustomText(
-                                                  formatter.format(order.total),
-                                                  style: AppStyle.priceBig
-                                                      .copyWith(fontSize: 12),
-                                                ),
-                                              ),
-                                              // Sản phẩm
-                                              Expanded(
-                                                flex: 5,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: order.items.map((
-                                                    item,
-                                                  ) {
-                                                    return Row(
-                                                      children: [
-                                                        Image.network(
-                                                          item.productImage,
-                                                          width: 30,
-                                                          height: 30,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 8,
-                                                        ),
-                                                        CustomText(
-                                                          '${item.productName} (${item.size})',
-                                                          style: AppStyle
-                                                              .bodySmall12,
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 8,
-                                                        ),
-                                                        CustomText(
-                                                          'x${item.quantity}',
-                                                          style: AppStyle
-                                                              .bodySmall12,
-                                                        ),
-                                                      ],
-                                                    );
-                                                  }).toList(),
-                                                ),
-                                              ),
-                                              // Trạng thái
-                                              Expanded(
-                                                flex: 2,
-                                                child: DropdownButton<String>(
-                                                  value: order.status,
-                                                  isExpanded: true,
-                                                  icon: const Icon(
-                                                    Icons.arrow_drop_down,
-                                                    color: AppColor.primary,
-                                                  ),
-                                                  dropdownColor:
-                                                      AppColor.dialogBg,
-                                                  underline: const SizedBox(),
-                                                  onChanged:
-                                                      (String? newValue) async {
-                                                        if (newValue != null) {
-                                                          await controller
-                                                              .updateOrderStatus(
-                                                                order.id,
-                                                                OrderStatus.fromValue(
-                                                                  newValue,
-                                                                ),
-                                                              );
-                                                        }
-                                                      },
-                                                  items: OrderStatus.values
-                                                      .map(
-                                                        (
-                                                          status,
-                                                        ) => DropdownMenuItem<String>(
-                                                          value: status.value,
-                                                          child: Container(
-                                                            padding:
-                                                                const EdgeInsets.all(
-                                                                  8,
-                                                                ),
-                                                            decoration:
-                                                                BoxDecoration(
-                                                                  color: status
-                                                                      .bgColor,
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                        10,
-                                                                      ),
-                                                                ),
-                                                            child: CustomText(
-                                                              status.title,
-                                                              style: AppStyle
-                                                                  .caption
-                                                                  .copyWith(
-                                                                    color: status
-                                                                        .textColor,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                  ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      )
-                                                      .toList(),
-                                                ),
-                                              ),
-                                            ],
+                                                );
+                                              }).toList(),
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    })
-                                    .values
-                                    .toList(),
+
+                                          Expanded(
+                                            flex: 2,
+                                            child: DropdownButton<String>(
+                                              value: order.status,
+                                              isExpanded: true,
+                                              icon: const Icon(
+                                                Icons.arrow_drop_down,
+                                                color: AppColor.primary,
+                                              ),
+                                              dropdownColor: AppColor.dialogBg,
+                                              underline: const SizedBox(),
+                                              onChanged:
+                                                  (String? newValue) async {
+                                                    if (newValue != null) {
+                                                      await controller
+                                                          .updateOrderStatus(
+                                                            order.id,
+                                                            OrderStatus.fromValue(
+                                                              newValue,
+                                                            ),
+                                                          );
+                                                    }
+                                                  },
+                                              items: OrderStatus.values
+                                                  .map(
+                                                    (
+                                                      status,
+                                                    ) => DropdownMenuItem<String>(
+                                                      value: status.value,
+                                                      child: Container(
+                                                        padding:
+                                                            const EdgeInsets.all(
+                                                              8,
+                                                            ),
+                                                        decoration: BoxDecoration(
+                                                          color: status.bgColor,
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                10,
+                                                              ),
+                                                        ),
+                                                        child: CustomText(
+                                                          status.title,
+                                                          style: AppStyle
+                                                              .caption
+                                                              .copyWith(
+                                                                color: status
+                                                                    .textColor,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                  .toList(),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }).values,
                               ],
                             ),
                           ),

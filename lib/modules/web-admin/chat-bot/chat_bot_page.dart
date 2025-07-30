@@ -149,11 +149,12 @@ class ChatBotPage extends StatelessWidget {
                           children: [
                             Flexible(
                               child: CustomTextField(
+                                filled: true,
                                 controller: controller.promptController,
                                 onSubmit: (value) {
                                   controller.sendMessage();
                                 },
-                                hintText: 'Type your message...',
+                                hintText: 'Nhập tin nhắn...',
                               ),
                             ),
                             const SizedBox(width: 10),

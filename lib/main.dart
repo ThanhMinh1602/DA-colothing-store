@@ -24,6 +24,7 @@ void main() async {
   EasyLoading.instance
     ..loadingStyle = EasyLoadingStyle.dark
     ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    // ignore: deprecated_member_use
     ..maskColor = Colors.black.withOpacity(0.2)
     ..backgroundColor = Colors.white
     ..indicatorColor = AppColor.primary

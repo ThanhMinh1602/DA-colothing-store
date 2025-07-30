@@ -33,6 +33,9 @@ class OrderManagerController extends BaseController {
   final OrderService _orderService = OrderService();
 
   RxList<OrderModel> orders = <OrderModel>[].obs;
+  RxList<OrderModel> filteredOrders = <OrderModel>[].obs;
+  Rx<String?> selectedStatus = Rx<String?>(null);
+  Rx<DateTimeRange?> selectedDateRange = Rx<DateTimeRange?>(null);
 
   @override
   void onInit() {
@@ -41,6 +44,7 @@ class OrderManagerController extends BaseController {
     _orderService.getAllOrders().listen(
       (list) {
         orders.value = list;
+        applyFilters();
       },
       onError: (e) {
         showError(message: "Không lấy được danh sách đơn hàng: $e");
@@ -48,19 +52,48 @@ class OrderManagerController extends BaseController {
     );
   }
 
+  // Lọc theo trạng thái
+  void filterByStatus(String? status) {
+    selectedStatus.value = status;
+    applyFilters();
+  }
+
+  // Xóa bộ lọc ngày
+  void clearDateRangeFilter() {
+    selectedDateRange.value = null; // Xóa bộ lọc ngày
+    applyFilters(); // Áp dụng lại bộ lọc
+  }
+
+  // Lọc theo khoảng ngày
+  void filterByDateRange(DateTimeRange range) {
+    selectedDateRange.value = range;
+    applyFilters();
+  }
+
+  // Áp dụng các bộ lọc
+  void applyFilters() {
+    filteredOrders.value = orders.where((order) {
+      bool statusMatch =
+          selectedStatus.value == null || order.status == selectedStatus.value;
+      bool dateMatch =
+          selectedDateRange.value == null ||
+          (order.createdAt.isAfter(selectedDateRange.value!.start) &&
+              order.createdAt.isBefore(
+                selectedDateRange.value!.end.add(const Duration(days: 1)),
+              ));
+      return statusMatch && dateMatch;
+    }).toList();
+  }
+
   // Cập nhật trạng thái đơn hàng và gửi thông báo
   Future<void> updateOrderStatus(String orderId, OrderStatus status) async {
     try {
       showLoading(message: "Đang cập nhật trạng thái...");
-      // Chuyển đổi status thành value (string) của enum
       await _orderService.updateOrderStatus(orderId, status.value);
 
-      // Lấy userId từ đơn hàng để lấy deviceToken
       final order = orders.firstWhere((order) => order.id == orderId);
-      final userId =
-          order.userId; // Giả sử `userId` là ID người dùng trong order
+      final userId = order.userId;
 
-      // Lấy deviceToken từ Firestore của người dùng
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
@@ -68,7 +101,6 @@ class OrderManagerController extends BaseController {
       final deviceToken = userDoc.data()?['deviceToken'];
 
       if (deviceToken != null) {
-        // Gửi thông báo cho người dùng
         await NotificationService.sendPushNotification(
           deviceToken,
           'Cập nhật đơn hàng',
