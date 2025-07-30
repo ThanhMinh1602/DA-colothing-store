@@ -32,11 +32,4 @@ class LoginController extends BaseController {
       await showError(message: 'Đăng nhập thất bại, vui lòng thử lại!');
     }
   }
-
-  @override
-  void onClose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.onClose();
-  }
 }

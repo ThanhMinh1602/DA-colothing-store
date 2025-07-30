@@ -14,6 +14,7 @@ class CustomTextField extends StatefulWidget {
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
   final int maxLines;
+  final Function(String)? onSubmit; // Thêm tham số này để xử lý sự kiện Enter
 
   const CustomTextField({
     super.key,
@@ -26,6 +27,7 @@ class CustomTextField extends StatefulWidget {
     this.onChanged,
     this.validator,
     this.maxLines = 1,
+    this.onSubmit, // Thêm tham số này vào constructor
   });
 
   @override
@@ -98,6 +100,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               )
             : null,
       ),
+      onFieldSubmitted: widget.onSubmit, // Gọi hàm khi Enter được nhấn
     );
   }
 }

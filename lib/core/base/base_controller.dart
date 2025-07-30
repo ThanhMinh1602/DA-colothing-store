@@ -20,7 +20,10 @@ abstract class BaseController extends GetxController {
   }
 
   Future<void> showInfo({String? message}) async {
-    await EasyLoading.showInfo(message ?? 'Info');
+    await EasyLoading.showInfo(
+      message ?? 'Info',
+      duration: Duration(seconds: 1),
+    );
   }
 
   void unfocus() {

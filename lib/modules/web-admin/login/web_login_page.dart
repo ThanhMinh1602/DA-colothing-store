@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:male_clothing_store/app/router/app_routes.dart';
 import 'package:male_clothing_store/core/components/button/custom_button.dart';
 import 'package:male_clothing_store/core/components/text-field/custom_text_field.dart';
 import 'package:male_clothing_store/core/components/text/custom_text.dart';
@@ -14,7 +13,6 @@ class WebLoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<WebLoginController>();
-
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
       body: Center(
@@ -56,12 +54,9 @@ class WebLoginPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 32),
 
-                    // Nút Login
-                    Obx(
-                      () => CustomButton(
-                        onPressed: controller.login,
-                        btnText: 'Đăng nhập',
-                      ),
+                    CustomButton(
+                      onPressed: controller.login,
+                      btnText: 'Đăng nhập',
                     ),
                   ],
                 ),

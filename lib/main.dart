@@ -20,11 +20,11 @@ void main() async {
   if (!kIsWeb) {
     await PermissionService.requestNotificationPermission();
     await NotificationService.init();
-    // }
-    // final GetServerKey serverKey = GetServerKey();
-    // String? key = await serverKey.getServerKey();
-    // print("Server Key: $key ------");
   }
+  final GetServerKey serverKey = GetServerKey();
+  String? key = await serverKey.getServerKey();
+  print("Server Key: $key ------");
+
   EasyLoading.instance
     ..loadingStyle = EasyLoadingStyle.dark
     ..indicatorType = EasyLoadingIndicatorType.fadingCircle
@@ -46,7 +46,7 @@ void main() async {
       ),
       defaultTransition: kIsWeb ? Transition.fade : Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: kIsWeb ? 0 : 200),
-      initialRoute: kIsWeb ? WebRouter.dashboard : AppRoutes.splash,
+      initialRoute: kIsWeb ? WebRouter.login : AppRoutes.splash,
       getPages: kIsWeb ? WebPage.routes : AppPages.routes,
 
       builder: EasyLoading.init(),

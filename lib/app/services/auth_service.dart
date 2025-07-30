@@ -36,27 +36,46 @@ class AuthService {
     return userModel;
   }
 
-  // / Hàm đăng nhập
-  Future<UserCredential> loginWithEmail(String email, String password) async {
+  Future<String> loginWithEmail(String email, String password) async {
     final userCredential = await _auth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
 
-    // Lấy device token từ FCM
-    String? deviceToken = await FirebaseMessaging.instance.getToken();
+    // Lấy thông tin người dùng từ Firestore
+    DocumentSnapshot userDoc = await userRef
+        .doc(userCredential.user!.uid)
+        .get();
+    if (userDoc.exists) {
+      final userData = userDoc.data() as Map<String, dynamic>;
 
-    if (userCredential.user != null && deviceToken != null) {
-      // Cập nhật Firestore với deviceToken
-      await userRef.doc(userCredential.user!.uid).update({
-        'deviceToken': deviceToken,
-      });
+      // Kiểm tra vai trò của người dùng
+      String role = userData['role'] ?? '';
+
+      if (role == 'customer') {
+        // Lấy device token từ FCM
+        String? deviceToken = await FirebaseMessaging.instance.getToken();
+
+        if (deviceToken != null) {
+          // Cập nhật Firestore với deviceToken
+          await userRef.doc(userCredential.user!.uid).update({
+            'deviceToken': deviceToken,
+          });
+        }
+        return 'customer';
+      }
     }
 
-    return userCredential;
+    return 'admin';
   }
 
   Future<void> signOut() async {
+    if (_auth.currentUser != null) {
+      await userRef.doc(_auth.currentUser!.uid).update({
+        'deviceToken': FieldValue.delete(),
+      });
+    }
+
     await _auth.signOut();
   }
 

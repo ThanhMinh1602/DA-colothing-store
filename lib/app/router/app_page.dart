@@ -24,6 +24,8 @@ import 'package:male_clothing_store/modules/mobile/splash/splash_binding.dart';
 import 'package:male_clothing_store/modules/mobile/splash/splash_view.dart';
 import 'package:male_clothing_store/modules/web-admin/category-manager/category_manager_binding.dart';
 import 'package:male_clothing_store/modules/web-admin/category-manager/category_manager_page.dart';
+import 'package:male_clothing_store/modules/web-admin/chat-bot/chat_bot_bingding.dart';
+import 'package:male_clothing_store/modules/web-admin/chat-bot/chat_bot_page.dart';
 import 'package:male_clothing_store/modules/web-admin/dash-board/dash_board_binding.dart';
 import 'package:male_clothing_store/modules/web-admin/dash-board/dash_board_page.dart';
 import 'package:male_clothing_store/modules/web-admin/login/web_login_binding.dart';
@@ -118,6 +120,11 @@ class WebPage {
       name: WebRouter.orderManager,
       page: () => OrderManagerPage(),
       binding: OrderManagerBinding(),
+    ),
+    GetPage(
+      name: WebRouter.chatBot,
+      page: () => ChatBotPage(),
+      binding: ChatBotBingding(),
     ),
   ];
 }

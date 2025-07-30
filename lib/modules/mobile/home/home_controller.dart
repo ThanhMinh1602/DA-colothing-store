@@ -35,7 +35,6 @@ class HomeController extends BaseController {
     _loadProfile();
 
     everAll([selectedCategory, searchKeyword], (_) {
-      unfocus();
       _filterProducts();
     });
   }

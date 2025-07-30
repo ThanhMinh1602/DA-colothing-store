@@ -41,6 +41,11 @@ class CustomSidebar extends StatelessWidget {
       title: "Đơn hàng",
       route: WebRouter.orderManager,
     ),
+    SidebarMenuItem(
+      icon: Icons.chat,
+      title: "Chat bot",
+      route: WebRouter.chatBot,
+    ),
   ];
 
   const CustomSidebar({super.key, required this.currentTitle, this.onLogout});

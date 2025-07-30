@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:male_clothing_store/app/model/user_model.dart';
+import 'package:male_clothing_store/app/services/auth_service.dart';
 import 'package:male_clothing_store/app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:male_clothing_store/core/base/base_controller.dart';
@@ -12,6 +13,7 @@ import 'package:male_clothing_store/app/router/app_routes.dart';
 class ProfileController extends BaseController {
   final Rxn<UserModel> user = Rxn<UserModel>();
   final UserService _userService = UserService();
+  final AuthService _authService = AuthService();
   StreamSubscription? userSubscription;
 
   @override
@@ -39,7 +41,7 @@ class ProfileController extends BaseController {
     );
     if (confirm == true) {
       showLoading(message: "Đang đăng xuất...");
-      await FirebaseAuth.instance.signOut();
+      await _authService.signOut();
       hideLoading();
       goOffAll(AppRoutes.login);
       await showSuccess(message: "Bạn đã đăng xuất khỏi tài khoản!");

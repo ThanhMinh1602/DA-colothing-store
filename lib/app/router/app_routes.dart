@@ -37,4 +37,6 @@ class WebRouter {
   // Customer Management (tuỳ bạn có làm không)
   static const customerManager = '/customers';
   static const customerDetail = '/customers/:id';
+
+  static const chatBot = '/chat-bot';
 }
