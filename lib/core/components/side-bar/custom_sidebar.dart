@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:male_clothing_store/app/router/app_routes.dart';
+import 'package:male_clothing_store/core/components/dialog/custom_dialog.dart';
 import 'package:male_clothing_store/core/components/text/custom_text.dart';
 import 'package:male_clothing_store/core/constants/app_color.dart';
 
@@ -16,16 +17,31 @@ class SidebarMenuItem {
   });
 }
 
+Future<void> _logoutConfirm(BuildContext context) async {
+  final confirmed = await CustomDialog.showConfirmDialog(
+    context: context,
+    title: "Đăng xuất",
+    message: "Bạn có chắc chắn muốn đăng xuất?",
+    cancelText: "Không",
+    confirmText: "Có",
+    confirmColor: AppColor.error,
+  );
+
+  if (confirmed) {
+    Get.offAllNamed(WebRouter.login);
+  }
+}
+
 class CustomSidebar extends StatelessWidget {
   final String currentTitle;
   final VoidCallback? onLogout;
 
   static const List<SidebarMenuItem> menuItems = [
-    SidebarMenuItem(
-      icon: Icons.dashboard,
-      title: "Trang chủ",
-      route: WebRouter.dashboard,
-    ),
+    // SidebarMenuItem(
+    //   icon: Icons.dashboard,
+    //   title: "Trang chủ",
+    //   route: WebRouter.dashboard,
+    // ),
     SidebarMenuItem(
       icon: Icons.shopping_bag,
       title: "Sản phẩm",
@@ -105,7 +121,7 @@ class CustomSidebar extends StatelessWidget {
             onTap:
                 onLogout ??
                 () {
-                  Get.offAllNamed(WebRouter.login);
+                  _logoutConfirm(context);
                 },
           ),
         ],

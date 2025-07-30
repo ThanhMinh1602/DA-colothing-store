@@ -21,33 +21,69 @@ class LoginView extends StatelessWidget {
       onTap: context.unfocus,
       child: Scaffold(
         body: Center(
-          child: Form(
-            key: controller.formKey,
-            child: ListView(
-              shrinkWrap: true,
-              padding: const EdgeInsets.all(24),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Column(
               children: [
-                CustomText(
-                  'Đăng nhập',
-                  style: AppStyle.loginTitle,
-                  textAlign: TextAlign.center,
+                // Icon above the login form
+
+                // Card containing the form fields
+                Card(
+                  elevation: 4.0,
+                  color: AppColor.backgroundColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Form(
+                      key: controller.formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          CustomText(
+                            'Đăng nhập',
+                            style: AppStyle.loginTitle,
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 24),
+                          CustomTextField(
+                            controller: controller.emailController,
+                            hintText: 'Email',
+                            validator: (value) =>
+                                AppValidator.required(value) ??
+                                AppValidator.email(value),
+                          ),
+                          const SizedBox(height: 16),
+                          CustomTextField(
+                            controller: controller.passwordController,
+                            hintText: 'Mật khẩu',
+                            isPassword: true,
+                            validator: AppValidator.password,
+                          ),
+                          const SizedBox(height: 16),
+
+                          // Forgot Password link below the password field
+                          InkWell(
+                            onTap: () => Get.toNamed(AppRoutes.forgotPass),
+                            child: Text(
+                              'Quên mật khẩu?',
+                              style: AppStyle.linkAction,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+
+                          // Login Button
+                          CustomButton(
+                            onPressed: controller.login,
+                            btnText: 'Đăng nhập',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 24),
-                CustomTextField(
-                  controller: controller.emailController,
-                  hintText: 'Email',
-                  validator: (value) =>
-                      AppValidator.required(value) ?? AppValidator.email(value),
-                ),
-                const SizedBox(height: 16),
-                CustomTextField(
-                  controller: controller.passwordController,
-                  hintText: 'Mật khẩu',
-                  isPassword: true,
-                  validator: AppValidator.password,
-                ),
-                const SizedBox(height: 24),
-                CustomButton(onPressed: controller.login, btnText: 'Đăng nhập'),
               ],
             ),
           ),
@@ -70,14 +106,6 @@ class LoginView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              InkWell(
-                onTap: () => Get.toNamed(AppRoutes.forgotPass),
-                child: Text(
-                  'Quên mật khẩu?',
-                  style: AppStyle.linkAction,
-                  textAlign: TextAlign.center,
-                ),
-              ),
             ],
           ),
         ),

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:male_clothing_store/app/model/message_model.dart';
-import 'package:male_clothing_store/app/model/user_model.dart';
+import 'package:male_clothing_store/app/services/chat_service.dart';
 import 'package:male_clothing_store/app/services/gemini_service.dart';
 import 'package:male_clothing_store/app/services/order_service.dart';
 import 'package:male_clothing_store/app/services/product_service.dart';
@@ -33,11 +33,31 @@ enum GeminiType {
 class ChatBotController extends BaseController {
   final promptController = TextEditingController();
   final GeminiService _geminiService = GeminiService();
+  final ChatService _chatService = ChatService();
   var isLoading = false.obs;
   RxList<MessageModel> messages = <MessageModel>[].obs;
   String conversationContext = '';
 
   Rx<GeminiType> typeGemini = GeminiType.chat.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadChatHistory();
+  }
+
+  Future<void> _loadChatHistory() async {
+    messages.value = await _chatService.getChatHistory();
+    _updateConversationContext();
+  }
+
+  void _updateConversationContext() {
+    conversationContext = '';
+    for (var message in messages) {
+      conversationContext +=
+          "\n${message.isSentByUser ? 'User' : 'Gemini'}: ${message.content}";
+    }
+  }
 
   void changeTypeGemini(GeminiType type) {
     typeGemini.value = type;
@@ -52,16 +72,18 @@ class ChatBotController extends BaseController {
     messages.add(MessageModel(content: 'Đang trả lời...', isSentByUser: false));
     promptController.clear();
 
-    // Generate response based on the GeminiType
+    _chatService.saveMessage(
+      messages.lastWhere((msg) => msg.content != 'Đang trả lời...'),
+    );
+
     generateGeminiContent(conversationContext);
   }
 
-  // Generate content based on the GeminiType
   Future<void> generateGeminiContent(String context) async {
     try {
       isLoading.value = true;
+      String dataJson = '';
 
-      var dataJson = '';
       switch (typeGemini.value) {
         case GeminiType.product:
           final products = await ProductService().getProducts().first;
@@ -86,23 +108,30 @@ class ChatBotController extends BaseController {
           final orders = await OrderService().getAllOrders().first;
           dataJson = jsonEncode(orders.map((order) => order.toMap()).toList());
           break;
+
         case GeminiType.chat:
           dataJson = '';
           break;
       }
 
-      print('Generated data JSON: $dataJson');
       final response = await _geminiService.generateContent(context, dataJson);
 
       messages.removeWhere((msg) => msg.content == 'Đang trả lời...');
       messages.add(MessageModel(content: response, isSentByUser: false));
 
       conversationContext += "\nGemini: $response";
+
+      _chatService.saveMessage(messages.last);
     } catch (e) {
       messages.removeWhere((msg) => msg.content == 'Đang trả lời...');
       messages.add(MessageModel(content: 'Error: $e', isSentByUser: false));
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<void> clearChatHistory() async {
+    messages.clear();
+    await _chatService.clearChatHistory();
   }
 }

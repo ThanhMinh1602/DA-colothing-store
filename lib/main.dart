@@ -21,10 +21,6 @@ void main() async {
     await PermissionService.requestNotificationPermission();
     await NotificationService.init();
   }
-  final GetServerKey serverKey = GetServerKey();
-  String? key = await serverKey.getServerKey();
-  print("Server Key: $key ------");
-
   EasyLoading.instance
     ..loadingStyle = EasyLoadingStyle.dark
     ..indicatorType = EasyLoadingIndicatorType.fadingCircle

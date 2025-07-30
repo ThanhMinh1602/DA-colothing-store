@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:male_clothing_store/core/components/dialog/custom_dialog.dart';
 import 'package:male_clothing_store/core/components/side-bar/custom_sidebar.dart';
 import 'package:male_clothing_store/core/components/text-field/custom_text_field.dart';
 import 'package:male_clothing_store/core/constants/app_color.dart';
@@ -10,6 +11,23 @@ class ChatBotPage extends StatelessWidget {
   ChatBotPage({super.key});
   final ChatBotController controller = Get.find();
   final ScrollController _scrollController = ScrollController();
+  // Function to show the clear chat confirmation dialog
+  Future<void> _showClearChatDialog(BuildContext context) async {
+    final confirmed = await CustomDialog.showConfirmDialog(
+      context: context,
+      title: "Xoá lịch sử trò chuyện",
+      message: "Bạn có chắc chắn muốn xóa toàn bộ lịch sử trò chuyện?",
+      cancelText: "Huỷ",
+      confirmText: "Xoá",
+      confirmColor: AppColor.error, // Red color for delete action
+    );
+
+    if (confirmed) {
+      // Clear the chat history
+      controller.messages.clear();
+      controller.clearChatHistory();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +53,18 @@ class ChatBotPage extends StatelessWidget {
                     ),
                   ),
                   actions: [
-                    SizedBox(
-                      width: 160, // Increased width for better visibility
+                    // Clear chat button with confirmation dialog
+                    IconButton(
+                      onPressed: () => _showClearChatDialog(
+                        context,
+                      ), // Show confirmation dialog on press
+                      icon: const Icon(
+                        Icons.delete_forever,
+                        color: AppColor.error,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    IntrinsicWidth(
                       child: Obx(
                         () => DropdownButtonFormField<GeminiType>(
                           value: controller.typeGemini.value,
@@ -96,21 +124,16 @@ class ChatBotPage extends StatelessWidget {
                                 ),
                                 decoration: BoxDecoration(
                                   color: message.isSentByUser
-                                      ? Colors.blue.withOpacity(
-                                          0.8,
-                                        ) // Nền xanh dương nhẹ cho tin nhắn gửi đi
-                                      : Colors
-                                            .grey[300], // Nền xám nhạt cho tin nhắn nhận
+                                      ? Colors.blue.withOpacity(0.8)
+                                      : Colors.grey[300],
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Text(
                                   message.content,
                                   style: AppStyle.regular14.copyWith(
                                     color: message.isSentByUser
-                                        ? Colors
-                                              .white // Màu chữ trắng cho tin nhắn gửi đi
-                                        : Colors
-                                              .black, // Màu chữ đen cho tin nhắn nhận
+                                        ? Colors.white
+                                        : Colors.black,
                                   ),
                                 ),
                               ),
