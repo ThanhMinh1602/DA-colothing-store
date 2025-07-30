@@ -80,14 +80,12 @@ class ProductManagerPage extends StatelessWidget {
                                 value: '',
                                 child: Text('Tất cả'),
                               ),
-                              ...controller.categories
-                                  .map(
-                                    (cat) => DropdownMenuItem(
-                                      value: cat.name,
-                                      child: Text(cat.name),
-                                    ),
-                                  )
-                                  .toList(),
+                              ...controller.categories.map(
+                                (cat) => DropdownMenuItem(
+                                  value: cat.name,
+                                  child: Text(cat.name),
+                                ),
+                              ),
                             ],
                             onChanged: controller.onCategoryChanged,
                           ),
@@ -133,6 +131,7 @@ class ProductManagerPage extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Row(
+                                    spacing: 10,
                                     children: const [
                                       Expanded(
                                         flex: 1,
@@ -212,6 +211,7 @@ class ProductManagerPage extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Row(
+                                      spacing: 10,
                                       children: [
                                         Expanded(
                                           flex: 1,
@@ -284,6 +284,12 @@ class ProductManagerPage extends StatelessWidget {
                                           flex: 1,
                                           child: Row(
                                             children: [
+                                              SizedBox(width: 12),
+                                              if (prod.quantity > 0)
+                                                CustomText(
+                                                  'X ${prod.quantity}',
+                                                  style: AppStyle.bodySmall12,
+                                                ),
                                               IconButton(
                                                 icon: const Icon(
                                                   Icons.edit,
@@ -318,7 +324,7 @@ class ProductManagerPage extends StatelessWidget {
                                       ],
                                     ),
                                   );
-                                }).toList(),
+                                }),
                               ],
                             ),
                           );

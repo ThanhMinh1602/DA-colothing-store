@@ -12,9 +12,27 @@ class GeminiService {
     _model = GenerativeModel(model: 'gemini-2.0-flash', apiKey: apiKey);
   }
 
-  Future<String> generateContent(String prompt, String data) async {
+  Future<String> generateContent(
+    String prompt, {
+    required String productData,
+    required String userData,
+    required String categoryData,
+    required String orderData,
+  }) async {
     try {
-      final content = [Content.text(prompt), Content.text(data)];
+      final content = [
+        Content.text('### Prompt:'),
+        Content.text(prompt),
+        Content.text('### Product Data:'),
+        Content.text(productData),
+        Content.text('### User Data:'),
+        Content.text(userData),
+        Content.text('### Category Data:'),
+        Content.text(categoryData),
+        Content.text('### Order Data:'),
+        Content.text(orderData),
+      ];
+
       final result = await _model.generateContent(content);
       return result.text ?? 'No response received.';
     } catch (e) {

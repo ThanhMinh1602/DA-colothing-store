@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:male_clothing_store/core/constants/app_assets.dart';
 import 'package:male_clothing_store/core/constants/app_color.dart';
@@ -16,6 +17,7 @@ class CustomTextField extends StatefulWidget {
   final int maxLines;
   final Function(String)? onSubmit; // Thêm tham số này để xử lý sự kiện Enter
   final bool filled;
+  final bool isNumber;
 
   const CustomTextField({
     super.key,
@@ -29,7 +31,8 @@ class CustomTextField extends StatefulWidget {
     this.validator,
     this.maxLines = 1,
     this.onSubmit,
-    this.filled = false, // Thêm tham số này vào constructor
+    this.filled = false,
+    this.isNumber = false, // Thêm tham số này vào constructor
   });
 
   @override
@@ -51,10 +54,20 @@ class _CustomTextFieldState extends State<CustomTextField> {
       controller: widget.controller,
       onChanged: widget.onChanged,
       validator: widget.validator,
+
       obscureText: widget.isPassword ? _obscureText : false,
       style: widget.textStyle ?? const TextStyle(fontSize: 14),
       maxLines: widget.maxLines,
       keyboardType: widget.keyboardType,
+      inputFormatters: widget.isNumber
+          ? [
+              // Chỉ cho phép nhập các ký tự là số
+              FilteringTextInputFormatter.deny(RegExp(r'[^0-9]')),
+
+              // Cấm nhập số bắt đầu bằng 0 nếu không phải là 0 duy nhất
+              FilteringTextInputFormatter.deny(RegExp(r'^0[0-9]')),
+            ]
+          : null,
       decoration: InputDecoration(
         filled: widget.filled,
         fillColor: AppColor.white,

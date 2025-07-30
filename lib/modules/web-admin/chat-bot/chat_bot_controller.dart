@@ -11,10 +11,7 @@ import 'package:male_clothing_store/app/services/user_service.dart';
 import 'package:male_clothing_store/core/base/base_controller.dart';
 
 enum GeminiType {
-  product('product', 'Sản phẩm'),
-  user('user', 'Khách hàng'),
-  category('category', 'Danh mục'),
-  order('order', 'Đơn hàng'),
+  analysic('analysic', 'Phân tích'),
   chat('chat', 'Live Chat');
 
   const GeminiType(this.value, this.title);
@@ -25,7 +22,7 @@ enum GeminiType {
   static GeminiType fromValue(String? value) {
     return GeminiType.values.firstWhere(
       (e) => e.value == value,
-      orElse: () => GeminiType.product,
+      orElse: () => GeminiType.analysic,
     );
   }
 }
@@ -46,11 +43,13 @@ class ChatBotController extends BaseController {
     _loadChatHistory();
   }
 
+  // Tải lịch sử trò chuyện
   Future<void> _loadChatHistory() async {
     messages.value = await _chatService.getChatHistory();
     _updateConversationContext();
   }
 
+  // Cập nhật lại bối cảnh cuộc trò chuyện
   void _updateConversationContext() {
     conversationContext = '';
     for (var message in messages) {
@@ -59,10 +58,12 @@ class ChatBotController extends BaseController {
     }
   }
 
+  // Thay đổi loại Gemini
   void changeTypeGemini(GeminiType type) {
     typeGemini.value = type;
   }
 
+  // Gửi tin nhắn từ người dùng
   void sendMessage() {
     final prompt = promptController.text.trim();
     if (prompt.isEmpty) return;
@@ -79,42 +80,52 @@ class ChatBotController extends BaseController {
     generateGeminiContent(conversationContext);
   }
 
+  // Gửi yêu cầu tạo nội dung từ Gemini
   Future<void> generateGeminiContent(String context) async {
     try {
       isLoading.value = true;
-      String dataJson = '';
+      String productData = '';
+      String userData = '';
+      String categoryData = '';
+      String orderData = '';
 
+      // Lấy dữ liệu phù hợp với loại Gemini
       switch (typeGemini.value) {
-        case GeminiType.product:
+        case GeminiType.analysic:
           final products = await ProductService().getProducts().first;
-          dataJson = jsonEncode(
+          productData = jsonEncode(
             products.map((product) => product.toJson()).toList(),
           );
-          break;
 
-        case GeminiType.user:
           final users = await UserService().getUsers().first;
-          dataJson = jsonEncode(users.map((user) => user.toJson()).toList());
-          break;
+          userData = jsonEncode(users.map((user) => user.toJson()).toList());
 
-        case GeminiType.category:
           final categories = await CategoryService().getCategories().first;
-          dataJson = jsonEncode(
+          categoryData = jsonEncode(
             categories.map((category) => category.toJson()).toList(),
           );
-          break;
 
-        case GeminiType.order:
           final orders = await OrderService().getAllOrders().first;
-          dataJson = jsonEncode(orders.map((order) => order.toMap()).toList());
+          orderData = jsonEncode(orders.map((order) => order.toMap()).toList());
           break;
 
         case GeminiType.chat:
-          dataJson = '';
+          // Dữ liệu trống cho loại chat
+          productData = '';
+          userData = '';
+          categoryData = '';
+          orderData = '';
           break;
       }
 
-      final response = await _geminiService.generateContent(context, dataJson);
+      // Gửi yêu cầu tới Gemini API với dữ liệu cụ thể
+      final response = await _geminiService.generateContent(
+        context,
+        productData: productData,
+        userData: userData,
+        categoryData: categoryData,
+        orderData: orderData,
+      );
 
       messages.removeWhere((msg) => msg.content == 'Đang trả lời...');
       messages.add(MessageModel(content: response, isSentByUser: false));
@@ -130,6 +141,7 @@ class ChatBotController extends BaseController {
     }
   }
 
+  // Xóa lịch sử trò chuyện
   Future<void> clearChatHistory() async {
     messages.clear();
     await _chatService.clearChatHistory();

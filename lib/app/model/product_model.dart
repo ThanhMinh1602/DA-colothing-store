@@ -7,6 +7,7 @@ class ProductModel {
   String? description;
   List<String>? colors; // Thêm màu sắc
   List<String>? sizes; // Thêm size
+  int quantity; // Thêm số lượng sản phẩm
 
   ProductModel({
     required this.id,
@@ -17,6 +18,7 @@ class ProductModel {
     this.description,
     this.colors,
     this.sizes,
+    required this.quantity, // Khởi tạo số lượng sản phẩm
   });
 
   // fromJson (Firestore map)
@@ -32,6 +34,7 @@ class ProductModel {
       description: json['description'],
       colors: (json['colors'] as List?)?.map((e) => e.toString()).toList(),
       sizes: (json['sizes'] as List?)?.map((e) => e.toString()).toList(),
+      quantity: json['quantity'] ?? 1, // Giả sử quantity mặc định là 1
     );
   }
 
@@ -45,6 +48,7 @@ class ProductModel {
       'description': description,
       'colors': colors,
       'sizes': sizes,
+      'quantity': quantity, // Thêm quantity vào JSON
     };
   }
 }

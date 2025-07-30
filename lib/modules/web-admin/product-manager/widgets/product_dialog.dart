@@ -35,6 +35,7 @@ class _ProductDialogState extends State<ProductDialog> {
   late final TextEditingController _sizesController;
   late final TextEditingController _colorsController;
   late final TextEditingController _descriptionController;
+  late final TextEditingController _quantityController;
 
   String? _selectedCategory;
   String _imagePreview = '';
@@ -59,6 +60,9 @@ class _ProductDialogState extends State<ProductDialog> {
     );
     _descriptionController = TextEditingController(
       text: widget.initialProduct?.description ?? '',
+    );
+    _quantityController = TextEditingController(
+      text: widget.initialProduct?.quantity.toString() ?? '',
     );
 
     _selectedCategory = widget.initialProduct?.category;
@@ -174,6 +178,14 @@ class _ProductDialogState extends State<ProductDialog> {
               ),
               const SizedBox(height: 12),
               CustomTextField(
+                isNumber: true,
+                controller: _quantityController,
+                hintText: 'Số lượng sản phẩm',
+                validator: AppValidator.positiveNumber,
+              ),
+
+              const SizedBox(height: 12),
+              CustomTextField(
                 controller: _descriptionController,
                 hintText: 'Mô tả sản phẩm',
                 maxLines: 5,
@@ -213,6 +225,10 @@ class _ProductDialogState extends State<ProductDialog> {
                             .map((s) => s.trim())
                             .where((s) => s.isNotEmpty)
                             .toList(),
+                        quantity:
+                            int.tryParse(_quantityController.text.trim()) ??
+                            100,
+                        // Mặc định là 1 nếu không nhập
                         colors: _colorsController.text
                             .split(',')
                             .map((c) => c.trim())

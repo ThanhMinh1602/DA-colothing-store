@@ -104,7 +104,7 @@ class CartController extends BaseController {
       await showSuccess(message: 'Thanh toán thành công!');
     } catch (e) {
       hideLoading();
-      await showError(message: "Thanh toán thất bại!");
+      await showError(message: e.toString());
     }
   }
 }
