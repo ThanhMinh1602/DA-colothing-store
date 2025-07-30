@@ -6,6 +6,7 @@ class UserModel {
   final String? phone;
   final String? address;
   final String? role;
+  final String? deviceToken;
 
   UserModel({
     required this.id,
@@ -15,6 +16,7 @@ class UserModel {
     this.phone,
     this.address,
     this.role,
+    this.deviceToken,
   });
 
   // From Firestore
@@ -27,6 +29,7 @@ class UserModel {
       phone: json['phone'],
       address: json['address'],
       role: json['role'],
+      deviceToken: json['deviceToken'],
     );
   }
 

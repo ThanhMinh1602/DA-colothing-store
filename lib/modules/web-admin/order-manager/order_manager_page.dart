@@ -8,14 +8,6 @@ import 'package:male_clothing_store/core/components/text/custom_text.dart';
 import 'package:male_clothing_store/core/constants/app_color.dart';
 import 'package:male_clothing_store/core/constants/app_style.dart';
 
-const allStatus = [
-  'Chờ xử lý',
-  'Đã xác nhận',
-  'Đang giao',
-  'Đã giao',
-  'Đã huỷ',
-];
-
 class OrderManagerPage extends StatefulWidget {
   const OrderManagerPage({super.key});
 
@@ -69,25 +61,33 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Row(
+                                    spacing: 10,
                                     children: const [
                                       Expanded(
-                                        flex: 2,
+                                        flex: 1,
                                         child: CustomText(
-                                          'Mã đơn',
+                                          'STT',
                                           style: AppStyle.semiBold14,
                                         ),
                                       ),
                                       Expanded(
-                                        flex: 3,
+                                        flex: 4,
                                         child: CustomText(
-                                          'Khách hàng',
+                                          'Mã đơn hàng & Thông tin người nhận',
                                           style: AppStyle.semiBold14,
                                         ),
                                       ),
                                       Expanded(
                                         flex: 2,
                                         child: CustomText(
-                                          'Tổng tiền',
+                                          'Thành tiền',
+                                          style: AppStyle.semiBold14,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 5,
+                                        child: CustomText(
+                                          'Sản phẩm',
                                           style: AppStyle.semiBold14,
                                         ),
                                       ),
@@ -98,20 +98,6 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                                           style: AppStyle.semiBold14,
                                         ),
                                       ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: CustomText(
-                                          'Ngày đặt',
-                                          style: AppStyle.semiBold14,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 3,
-                                        child: CustomText(
-                                          'Thao tác',
-                                          style: AppStyle.semiBold14,
-                                        ),
-                                      ),
                                     ],
                                   ),
                                 ),
@@ -119,123 +105,188 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                                   height: 1,
                                   color: AppColor.borderLight,
                                 ),
-                                ...controller.orders.map((order) {
-                                  return Container(
-                                    margin: const EdgeInsets.symmetric(
-                                      vertical: 4,
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 10,
-                                      horizontal: 12,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppColor.kFDFDFD,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          flex: 2,
-                                          child: CustomText(
-                                            order.id,
-                                            style: AppStyle.semiBold14,
+                                ...controller.orders
+                                    .asMap()
+                                    .map((index, order) {
+                                      return MapEntry(
+                                        index,
+                                        Container(
+                                          margin: const EdgeInsets.symmetric(
+                                            vertical: 4,
                                           ),
-                                        ),
-                                        Expanded(
-                                          flex: 3,
-                                          child: CustomText(
-                                            order.userId ?? '-',
-                                            style: AppStyle.productCardTitle,
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 10,
+                                            horizontal: 12,
                                           ),
-                                        ),
-                                        Expanded(
-                                          flex: 2,
-                                          child: CustomText(
-                                            formatter.format(order.total),
-                                            style: AppStyle.priceBig,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 2,
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 4,
-                                              horizontal: 12,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: _statusBgColor(
-                                                order.status,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
-                                            ),
-                                            child: CustomText(
-                                              order.status,
-                                              style: AppStyle.caption.copyWith(
-                                                color: _statusTextColor(
-                                                  order.status,
-                                                ),
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                          decoration: BoxDecoration(
+                                            color: AppColor.kFDFDFD,
+                                            borderRadius: BorderRadius.circular(
+                                              8,
                                             ),
                                           ),
-                                        ),
-                                        Expanded(
-                                          flex: 2,
-                                          child: CustomText(
-                                            DateFormat(
-                                              'dd/MM/yyyy HH:mm',
-                                            ).format(order.createdAt),
-                                            style: AppStyle.bodySmall12,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 3,
                                           child: Row(
+                                            spacing: 10,
                                             children: [
-                                              IconButton(
-                                                icon: const Icon(
-                                                  Icons.visibility,
-                                                  color: AppColor.primary,
+                                              // STT
+                                              Expanded(
+                                                flex: 1,
+                                                child: CustomText(
+                                                  '${index + 1}',
+                                                  style: AppStyle.semiBold14,
                                                 ),
-                                                tooltip: 'Xem chi tiết',
-                                                onPressed: () =>
-                                                    _showDetailDialog(
-                                                      context,
-                                                      order,
-                                                    ),
                                               ),
-                                              IconButton(
-                                                icon: const Icon(
-                                                  Icons.edit,
-                                                  color: AppColor.blue,
-                                                ),
-                                                tooltip: 'Đổi trạng thái',
-                                                onPressed: () =>
-                                                    _showChangeStatusDialog(
-                                                      context,
-                                                      order,
+                                              // Mã đơn hàng và thông tin người nhận
+                                              Expanded(
+                                                flex: 4,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    CustomText(
+                                                      '#${order.id}',
+                                                      style:
+                                                          AppStyle.semiBold14,
                                                     ),
+                                                    CustomText(
+                                                      'Ngày đặt: ${DateFormat('dd/MM/yyyy').format(order.createdAt)}',
+                                                      style:
+                                                          AppStyle.bodySmall12,
+                                                    ),
+                                                    CustomText(
+                                                      'Tên người đặt: ${order.receiverName}',
+                                                      style:
+                                                          AppStyle.bodySmall12,
+                                                    ),
+                                                    CustomText(
+                                                      'SĐT: ${order.receiverPhone}',
+                                                      style:
+                                                          AppStyle.bodySmall12,
+                                                    ),
+                                                    CustomText(
+                                                      'Địa chỉ: ${order.shippingAddress}',
+                                                      style:
+                                                          AppStyle.bodySmall12,
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                              IconButton(
-                                                icon: const Icon(
-                                                  Icons.delete,
-                                                  color: AppColor.error,
+                                              // Thành tiền
+                                              Expanded(
+                                                flex: 2,
+                                                child: CustomText(
+                                                  formatter.format(order.total),
+                                                  style: AppStyle.priceBig
+                                                      .copyWith(fontSize: 12),
                                                 ),
-                                                tooltip: 'Xoá',
-                                                onPressed: () =>
-                                                    _showDeleteDialog(
-                                                      context,
-                                                      order,
-                                                    ),
+                                              ),
+                                              // Sản phẩm
+                                              Expanded(
+                                                flex: 5,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: order.items.map((
+                                                    item,
+                                                  ) {
+                                                    return Row(
+                                                      children: [
+                                                        Image.network(
+                                                          item.productImage,
+                                                          width: 30,
+                                                          height: 30,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 8,
+                                                        ),
+                                                        CustomText(
+                                                          '${item.productName} (${item.size})',
+                                                          style: AppStyle
+                                                              .bodySmall12,
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 8,
+                                                        ),
+                                                        CustomText(
+                                                          'x${item.quantity}',
+                                                          style: AppStyle
+                                                              .bodySmall12,
+                                                        ),
+                                                      ],
+                                                    );
+                                                  }).toList(),
+                                                ),
+                                              ),
+                                              // Trạng thái
+                                              Expanded(
+                                                flex: 2,
+                                                child: DropdownButton<String>(
+                                                  value: order.status,
+                                                  isExpanded: true,
+                                                  icon: const Icon(
+                                                    Icons.arrow_drop_down,
+                                                    color: AppColor.primary,
+                                                  ),
+                                                  dropdownColor:
+                                                      AppColor.dialogBg,
+                                                  underline: const SizedBox(),
+                                                  onChanged:
+                                                      (String? newValue) async {
+                                                        if (newValue != null) {
+                                                          await controller
+                                                              .updateOrderStatus(
+                                                                order.id,
+                                                                OrderStatus.fromValue(
+                                                                  newValue,
+                                                                ),
+                                                              );
+                                                        }
+                                                      },
+                                                  items: OrderStatus.values
+                                                      .map(
+                                                        (
+                                                          status,
+                                                        ) => DropdownMenuItem<String>(
+                                                          value: status.value,
+                                                          child: Container(
+                                                            padding:
+                                                                const EdgeInsets.all(
+                                                                  8,
+                                                                ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                  color: status
+                                                                      .bgColor,
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        10,
+                                                                      ),
+                                                                ),
+                                                            child: CustomText(
+                                                              status.title,
+                                                              style: AppStyle
+                                                                  .caption
+                                                                  .copyWith(
+                                                                    color: status
+                                                                        .textColor,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      )
+                                                      .toList(),
+                                                ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
+                                      );
+                                    })
+                                    .values
+                                    .toList(),
                               ],
                             ),
                           ),
@@ -250,183 +301,5 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
         ],
       ),
     );
-  }
-
-  // Dialog đổi trạng thái
-  void _showChangeStatusDialog(BuildContext context, OrderModel order) {
-    String selectedStatus = order.status;
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColor.dialogBg,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        title: const CustomText(
-          'Đổi trạng thái đơn hàng',
-          style: AppStyle.bottomSheetTitle,
-        ),
-        content: DropdownButtonFormField<String>(
-          value: selectedStatus,
-          decoration: InputDecoration(
-            labelText: 'Trạng thái',
-            labelStyle: AppStyle.labelSmall,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-          items: allStatus
-              .map((s) => DropdownMenuItem(value: s, child: Text(s)))
-              .toList(),
-          onChanged: (value) {
-            if (value != null) selectedStatus = value;
-          },
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const CustomText('Huỷ', style: AppStyle.hintAction),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColor.blue,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            onPressed: () async {
-              await controller.updateOrderStatus(order.id, selectedStatus);
-              Navigator.pop(ctx);
-            },
-            child: const CustomText('Lưu', style: AppStyle.buttonPrimary),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Dialog xác nhận xoá
-  void _showDeleteDialog(BuildContext context, OrderModel order) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColor.dialogBg,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        title: const CustomText(
-          'Xoá đơn hàng',
-          style: AppStyle.bottomSheetTitle,
-        ),
-        content: CustomText(
-          'Bạn chắc chắn muốn xoá đơn hàng #${order.id} của ${order.userId ?? "-"}?',
-          style: AppStyle.dialogMessage,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const CustomText('Huỷ', style: AppStyle.hintAction),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColor.error,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            onPressed: () async {
-              await controller.deleteOrder(order.id);
-              Navigator.pop(ctx);
-            },
-            child: const CustomText('Xoá', style: AppStyle.buttonPrimary),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Dialog xem chi tiết (demo)
-  void _showDetailDialog(BuildContext context, OrderModel order) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColor.dialogBg,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        title: CustomText(
-          'Chi tiết đơn hàng #${order.id}',
-          style: AppStyle.bottomSheetTitle,
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomText(
-                'Khách: ${order.userId ?? "-"}',
-                style: AppStyle.bodySmall12,
-              ),
-              CustomText(
-                'Tổng tiền: ${formatter.format(order.total)}',
-                style: AppStyle.bodySmall12,
-              ),
-              CustomText(
-                'Trạng thái: ${order.status}',
-                style: AppStyle.bodySmall12,
-              ),
-              CustomText(
-                'Ngày đặt: ${DateFormat('dd/MM/yyyy HH:mm').format(order.createdAt)}',
-                style: AppStyle.bodySmall12,
-              ),
-              const SizedBox(height: 16),
-              const CustomText(
-                '(Có thể show thêm sản phẩm trong đơn, địa chỉ giao hàng...)',
-                style: AppStyle.caption,
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColor.primary,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            onPressed: () => Navigator.pop(ctx),
-            child: const CustomText('Đóng', style: AppStyle.buttonPrimary),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Màu trạng thái
-  Color _statusBgColor(String status) {
-    switch (status) {
-      case 'Chờ xử lý':
-        return AppColor.lightYellow;
-      case 'Đã xác nhận':
-        return AppColor.lightBlue;
-      case 'Đang giao':
-        return AppColor.lightGreen;
-      case 'Đã giao':
-        return AppColor.lightGreen;
-      case 'Đã huỷ':
-        return AppColor.saleBg;
-      default:
-        return AppColor.grey2;
-    }
-  }
-
-  Color _statusTextColor(String status) {
-    switch (status) {
-      case 'Chờ xử lý':
-        return AppColor.warning;
-      case 'Đã xác nhận':
-        return AppColor.blue;
-      case 'Đang giao':
-        return AppColor.green;
-      case 'Đã giao':
-        return AppColor.success;
-      case 'Đã huỷ':
-        return AppColor.error;
-      default:
-        return AppColor.textSecondary;
-    }
   }
 }

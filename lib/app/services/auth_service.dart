@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:male_clothing_store/app/model/user_model.dart';
 
 class AuthService {
@@ -27,7 +28,7 @@ class AuthService {
       avatarUrl: null,
       phone: null,
       address: null,
-      role: null,
+      role: 'customer',
     );
 
     await userRef.doc(user.uid).set(userModel.toJson());
@@ -35,11 +36,24 @@ class AuthService {
     return userModel;
   }
 
+  // / Hàm đăng nhập
   Future<UserCredential> loginWithEmail(String email, String password) async {
-    return await _auth.signInWithEmailAndPassword(
+    final userCredential = await _auth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
+
+    // Lấy device token từ FCM
+    String? deviceToken = await FirebaseMessaging.instance.getToken();
+
+    if (userCredential.user != null && deviceToken != null) {
+      // Cập nhật Firestore với deviceToken
+      await userRef.doc(userCredential.user!.uid).update({
+        'deviceToken': deviceToken,
+      });
+    }
+
+    return userCredential;
   }
 
   Future<void> signOut() async {

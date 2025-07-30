@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:male_clothing_store/app/model/cart_item_model.dart';
-import 'package:male_clothing_store/app/model/cart_model.dart';
 import 'package:male_clothing_store/app/services/auth_service.dart';
 
 class CartService {
