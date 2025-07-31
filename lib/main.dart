@@ -8,7 +8,6 @@ import 'package:male_clothing_store/app/router/app_routes.dart';
 import 'package:male_clothing_store/app/services/notification_service.dart';
 import 'package:male_clothing_store/app/services/permission_service.dart';
 import 'package:male_clothing_store/core/constants/app_color.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:male_clothing_store/firebase_options.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -16,10 +15,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await dotenv.load();
-  if (!kIsWeb) {
-    await PermissionService.requestNotificationPermission();
-    await NotificationService.init();
-  }
+
+  await PermissionService.requestNotificationPermission();
+  await NotificationService.init();
+
   EasyLoading.instance
     ..loadingStyle = EasyLoadingStyle.dark
     ..indicatorType = EasyLoadingIndicatorType.fadingCircle
@@ -39,10 +38,10 @@ void main() async {
         textTheme: GoogleFonts.encodeSansTextTheme(),
         scaffoldBackgroundColor: AppColor.backgroundColor,
       ),
-      defaultTransition: kIsWeb ? Transition.fade : Transition.rightToLeft,
-      transitionDuration: const Duration(milliseconds: kIsWeb ? 0 : 200),
-      initialRoute: kIsWeb ? WebRouter.login : AppRoutes.splash,
-      getPages: kIsWeb ? WebPage.routes : AppPages.routes,
+      defaultTransition: Transition.rightToLeft,
+      transitionDuration: const Duration(milliseconds: 200),
+      initialRoute: AppRoutes.splash,
+      getPages: AppPages.routes,
 
       builder: EasyLoading.init(),
     ),

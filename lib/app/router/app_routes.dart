@@ -16,7 +16,7 @@ class AppRoutes {
   static const chatBot = '/main/profile/chat-bot';
 }
 
-class WebRouter {
+class AdminRouter {
   // Auth
   static const login = '/login';
   // Dashboard

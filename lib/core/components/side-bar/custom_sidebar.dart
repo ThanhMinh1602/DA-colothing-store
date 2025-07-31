@@ -28,7 +28,7 @@ Future<void> _logoutConfirm(BuildContext context) async {
   );
 
   if (confirmed) {
-    Get.offAllNamed(WebRouter.login);
+    Get.offAllNamed(AdminRouter.login);
   }
 }
 
@@ -40,27 +40,27 @@ class CustomSidebar extends StatelessWidget {
     SidebarMenuItem(
       icon: Icons.dashboard,
       title: "Trang chủ",
-      route: WebRouter.dashboard,
+      route: AdminRouter.dashboard,
     ),
     SidebarMenuItem(
       icon: Icons.shopping_bag,
       title: "Sản phẩm",
-      route: WebRouter.productManager,
+      route: AdminRouter.productManager,
     ),
     SidebarMenuItem(
       icon: Icons.category,
       title: "Danh mục",
-      route: WebRouter.categoryManager,
+      route: AdminRouter.categoryManager,
     ),
     SidebarMenuItem(
       icon: Icons.receipt_long,
       title: "Đơn hàng",
-      route: WebRouter.orderManager,
+      route: AdminRouter.orderManager,
     ),
     SidebarMenuItem(
       icon: Icons.chat,
       title: "Chat bot",
-      route: WebRouter.chatBot,
+      route: AdminRouter.chatBot,
     ),
   ];
 
@@ -105,6 +105,7 @@ class CustomSidebar extends StatelessWidget {
               selected: isSelected,
               onTap: () {
                 if (Get.currentRoute != item.route) {
+                  Get.back();
                   Get.offNamed(item.route);
                 }
               },
