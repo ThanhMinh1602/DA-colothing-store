@@ -13,6 +13,7 @@ class AppRoutes {
   static const profileEdit = '/main/profile/edit';
   static const favourite = '/main/favourite';
   static const order = '/main/profile/order';
+  static const chatBot = '/main/profile/chat-bot';
 }
 
 class WebRouter {

@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:male_clothing_store/app/router/app_routes.dart';
 import 'package:male_clothing_store/modules/mobile/cart/cart_binding.dart';
 import 'package:male_clothing_store/modules/mobile/cart/cart_view.dart';
+import 'package:male_clothing_store/modules/mobile/chat-bot/chat_bot_binding.dart';
+import 'package:male_clothing_store/modules/mobile/chat-bot/chat_bot_screen.dart';
 import 'package:male_clothing_store/modules/mobile/favourite/favourite_binding.dart';
 import 'package:male_clothing_store/modules/mobile/favourite/favourite_screen.dart';
 import 'package:male_clothing_store/modules/mobile/forgot-pass/forgot_pass_binding.dart';
@@ -64,6 +66,11 @@ class AppPages {
       name: AppRoutes.productDetail,
       page: () => ProductDetailView(),
       binding: ProductDetailBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.chatBot,
+      page: () => const ChatBotScreen(),
+      binding: ChatBotBinding(),
     ),
     GetPage(
       name: AppRoutes.profileEdit,

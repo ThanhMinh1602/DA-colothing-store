@@ -19,7 +19,7 @@ class WebLoginController extends BaseController {
       );
       await showSuccess(message: "Đăng nhập thành công!");
       if (role == 'admin') {
-        goOffAll(WebRouter.productManager);
+        goOffAll(WebRouter.dashboard);
       }
     } catch (e) {
       showError(message: "Tên đăng nhập hoặc mật khẩu không đúng");

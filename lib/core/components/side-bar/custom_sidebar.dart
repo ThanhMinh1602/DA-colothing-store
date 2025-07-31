@@ -37,11 +37,11 @@ class CustomSidebar extends StatelessWidget {
   final VoidCallback? onLogout;
 
   static const List<SidebarMenuItem> menuItems = [
-    // SidebarMenuItem(
-    //   icon: Icons.dashboard,
-    //   title: "Trang chủ",
-    //   route: WebRouter.dashboard,
-    // ),
+    SidebarMenuItem(
+      icon: Icons.dashboard,
+      title: "Trang chủ",
+      route: WebRouter.dashboard,
+    ),
     SidebarMenuItem(
       icon: Icons.shopping_bag,
       title: "Sản phẩm",

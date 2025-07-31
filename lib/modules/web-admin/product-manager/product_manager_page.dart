@@ -142,7 +142,7 @@ class ProductManagerPage extends StatelessWidget {
                                         ),
                                       ),
                                       Expanded(
-                                        flex: 3,
+                                        flex: 2,
                                         child: CustomText(
                                           'Tên sản phẩm',
                                           style: AppStyle.semiBold14,
@@ -184,8 +184,9 @@ class ProductManagerPage extends StatelessWidget {
                                         ),
                                       ),
                                       Expanded(
-                                        flex: 1,
+                                        flex: 2,
                                         child: CustomText(
+                                          textAlign: TextAlign.center,
                                           'Thao tác',
                                           style: AppStyle.semiBold14,
                                         ),
@@ -230,7 +231,7 @@ class ProductManagerPage extends StatelessWidget {
                                                 ),
                                         ),
                                         Expanded(
-                                          flex: 3,
+                                          flex: 2,
                                           child: CustomText(
                                             prod.name,
                                             style: AppStyle.productCardTitle
@@ -281,8 +282,10 @@ class ProductManagerPage extends StatelessWidget {
                                           ),
                                         ),
                                         Expanded(
-                                          flex: 1,
+                                          flex: 2,
                                           child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
                                             children: [
                                               SizedBox(width: 12),
                                               if (prod.quantity > 0)

@@ -83,6 +83,13 @@ class ProfileScreen extends GetView<ProfileController> {
               },
             ),
             _buildProfileMenu(
+              icon: Icons.chat_bubble_outline,
+              title: 'Chat với Bot',
+              onTap: () {
+                Get.toNamed(AppRoutes.chatBot);
+              },
+            ),
+            _buildProfileMenu(
               icon: Icons.payment,
               title: 'Thêm phương thức thanh toán',
               onTap: () {},

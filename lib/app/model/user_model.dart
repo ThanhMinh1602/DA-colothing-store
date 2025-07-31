@@ -7,6 +7,7 @@ class UserModel {
   final String? address;
   final String? role;
   final String? deviceToken;
+  final DateTime? createdAt;
 
   UserModel({
     required this.id,
@@ -17,6 +18,7 @@ class UserModel {
     this.address,
     this.role,
     this.deviceToken,
+    this.createdAt,
   });
 
   // From Firestore
@@ -30,6 +32,9 @@ class UserModel {
       address: json['address'],
       role: json['role'],
       deviceToken: json['deviceToken'],
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
     );
   }
 
