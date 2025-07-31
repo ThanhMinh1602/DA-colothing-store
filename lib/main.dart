@@ -32,7 +32,7 @@ void main() async {
 
   runApp(
     GetMaterialApp(
-      title: 'NamWear',
+      title: 'M Clothing Store',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primary),

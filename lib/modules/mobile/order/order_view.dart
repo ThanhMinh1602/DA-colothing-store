@@ -49,7 +49,6 @@ class OrderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Định dạng ngày đặt (createdAt)
     String formattedDate = _formatDate(order.createdAt);
 
     return Card(
@@ -92,7 +91,6 @@ class OrderItem extends StatelessWidget {
     );
   }
 
-  // Hàm định dạng ngày
   String _formatDate(DateTime date) {
     final DateFormat formatter = DateFormat('dd/MM/yyyy');
     return formatter.format(date);

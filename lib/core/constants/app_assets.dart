@@ -13,4 +13,5 @@ class AppAssets {
   static const String shoppingBag = '$_iconPath/shopping-bag.svg';
   static const String shoppingCart = '$_iconPath/shopping-cart.svg';
   static const String star = '$_iconPath/star.svg';
+  static const String logo = 'assets/logo/icon.png';
 }

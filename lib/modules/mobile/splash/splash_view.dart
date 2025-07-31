@@ -25,9 +25,8 @@ class SplashView extends StatelessWidget {
             children: [
               Icon(Icons.shopping_bag, size: 80, color: AppColor.white),
               SizedBox(height: 20),
-
               Text(
-                'NamWear',
+                'M Clothing Store',
                 style: AppStyle.loginTitle.copyWith(color: AppColor.white),
               ),
               SizedBox(height: 10),
