@@ -11,12 +11,10 @@ class SplashView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Gradient background with AppColor.gradientPrimary
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors:
-                AppColor.gradientPrimary, // gradientPrimary for stylish look
+            colors: AppColor.gradientPrimary,
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -25,23 +23,15 @@ class SplashView extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Logo/Icon - can be replaced with your app's logo
-              Icon(
-                Icons.shopping_bag, // Placeholder icon
-                size: 80,
-                color: AppColor.white,
-              ),
+              Icon(Icons.shopping_bag, size: 80, color: AppColor.white),
               SizedBox(height: 20),
-              // App Name with improved styling using AppStyle
+
               Text(
                 'NamWear',
-                style: AppStyle.loginTitle.copyWith(
-                  color: AppColor
-                      .white, // Ensuring it's readable against the gradient
-                ),
+                style: AppStyle.loginTitle.copyWith(color: AppColor.white),
               ),
               SizedBox(height: 10),
-              // Optional Tagline or additional text
+
               Text(
                 'The best fashion for men',
                 style: AppStyle.subtitle.copyWith(color: AppColor.white),

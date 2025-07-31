@@ -10,6 +10,7 @@ import 'package:male_clothing_store/core/constants/app_assets.dart';
 import 'package:male_clothing_store/core/constants/app_color.dart';
 import 'package:male_clothing_store/core/constants/app_style.dart';
 import 'package:male_clothing_store/core/extension/build_context_extension.dart';
+import 'package:male_clothing_store/core/extension/string_extension.dart';
 import 'package:male_clothing_store/modules/mobile/home/widgets/product_item.dart';
 import 'home_controller.dart';
 
@@ -70,7 +71,7 @@ class HomeScreen extends StatelessWidget {
             imageUrl: p.imageUrl ?? "",
             name: p.name,
             category: p.category,
-            price: "${p.price}₫",
+            price: p.price.toString().formatAsVND(),
             rating: 5.0,
             onFavoriteTap: () {},
           ),

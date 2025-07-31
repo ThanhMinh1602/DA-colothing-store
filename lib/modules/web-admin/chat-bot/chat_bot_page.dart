@@ -124,7 +124,7 @@ class ChatBotPage extends StatelessWidget {
                                 ),
                                 decoration: BoxDecoration(
                                   color: message.isSentByUser
-                                      ? Colors.blue.withOpacity(0.8)
+                                      ? AppColor.primary
                                       : Colors.grey[300],
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -133,7 +133,7 @@ class ChatBotPage extends StatelessWidget {
                                   style: AppStyle.regular14.copyWith(
                                     color: message.isSentByUser
                                         ? Colors.white
-                                        : Colors.black,
+                                        : AppColor.primary.withOpacity(0.8),
                                   ),
                                 ),
                               ),

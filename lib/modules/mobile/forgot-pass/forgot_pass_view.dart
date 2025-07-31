@@ -39,7 +39,9 @@ class ForgotPassView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           CustomText(
-                            'Quên mật khẩu',
+                            Get.arguments.toString() == 'changePass'
+                                ? 'Đổi mật khẩu'
+                                : 'Quên mật khẩu',
                             style: AppStyle.loginTitle,
                             textAlign: TextAlign.center,
                           ),

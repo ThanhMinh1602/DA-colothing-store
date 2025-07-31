@@ -74,40 +74,7 @@ class CartView extends GetView<CartController> {
                 style: AppStyle.productCardTitle,
               ),
               const SizedBox(height: 12.0),
-              DropdownButtonFormField<BankCardModel>(
-                value: bankCards.first,
-                items: bankCards.map((bank) {
-                  return DropdownMenuItem<BankCardModel>(
-                    value: bank,
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(5.0),
-                          child: Image.network(
-                            bank.bankIcon,
-                            width: 45,
-                            height: 30,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Text(bank.bankNumber, style: AppStyle.semiBold14),
-                      ],
-                    ),
-                  );
-                }).toList(),
-                onChanged: (BankCardModel? value) {
-                  print('Đã chọn bank: ${value?.bankNumber}');
-                },
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: AppColor.grey6,
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-              ),
+              _buildBankCardDropdown(),
               const SizedBox(height: 24.0),
               _buildTextRowSpace(
                 leftText: 'Tổng cộng (${controller.totalQuantity} sản phẩm)',
@@ -125,50 +92,9 @@ class CartView extends GetView<CartController> {
                 leftText: 'Thành tiền',
                 rightText: _formatPrice(controller.total),
               ),
-              Obx(() {
-                final user = controller.currentUser.value;
-                if (user == null) return SizedBox();
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 10.0),
-                    CustomText(user.name, style: AppStyle.semiBold14),
-                    SizedBox(height: 10.0),
-                    CustomText(user.phone ?? '', style: AppStyle.semiBold14),
-                    SizedBox(height: 10.0),
-                    CustomText(user.address ?? '', style: AppStyle.semiBold14),
-                    SizedBox(height: 10.0),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: InkWell(
-                        onTap: () =>
-                            Get.toNamed(AppRoutes.profileEdit, arguments: user),
-                        child: CustomText(
-                          'Thay đổi thông tin ->',
-                          style: AppStyle.semiBold14.copyWith(
-                            color: AppColor.blue,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              }),
-
+              _buildUserInfoSection(),
               const SizedBox(height: 44.0),
-              CustomButton(
-                onPressed: () async {
-                  final ok = await CustomDialog.showConfirmDialog(
-                    context: context,
-                    message:
-                        'Bạn có chắc chắn muốn thanh toán tất cả sản phẩm này không?',
-                  );
-                  if (ok == true) {
-                    await controller.checkout();
-                  }
-                },
-                btnText: 'Thanh toán',
-              ),
+              _buildCheckoutButton(context),
             ],
           ),
         ),
@@ -187,6 +113,105 @@ class CartView extends GetView<CartController> {
         const SizedBox(width: 12),
         CustomText(rightText, style: AppStyle.semiBold14),
       ],
+    );
+  }
+
+  Widget _buildBankCardDropdown() {
+    return DropdownButtonFormField<BankCardModel>(
+      value: bankCards.first,
+      items: bankCards.map((bank) {
+        return DropdownMenuItem<BankCardModel>(
+          value: bank,
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(5.0),
+                child: Image.network(
+                  bank.bankIcon,
+                  width: 45,
+                  height: 30,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(bank.bankNumber, style: AppStyle.semiBold14),
+            ],
+          ),
+        );
+      }).toList(),
+      onChanged: (BankCardModel? value) {
+        print('Đã chọn bank: ${value?.bankNumber}');
+      },
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: AppColor.grey6,
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUserInfoSection() {
+    final user = controller.currentUser.value;
+
+    if (user == null ||
+        user.phone == null ||
+        user.address == null ||
+        user.address!.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.only(top: 16.0),
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: InkWell(
+            onTap: () => Get.toNamed(AppRoutes.profileEdit, arguments: user),
+            child: CustomText(
+              'Thêm thông tin thanh toán →',
+              style: AppStyle.semiBold14.copyWith(color: AppColor.blue),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 10.0),
+        CustomText(user.name, style: AppStyle.semiBold14),
+        SizedBox(height: 10.0),
+        CustomText(user.phone!, style: AppStyle.semiBold14),
+        SizedBox(height: 10.0),
+        CustomText(user.address!, style: AppStyle.semiBold14),
+        SizedBox(height: 10.0),
+        Align(
+          alignment: Alignment.centerRight,
+          child: InkWell(
+            onTap: () => Get.toNamed(AppRoutes.profileEdit, arguments: user),
+            child: CustomText(
+              'Thay đổi thông tin →',
+              style: AppStyle.semiBold14.copyWith(color: AppColor.blue),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCheckoutButton(BuildContext context) {
+    return CustomButton(
+      onPressed: () async {
+        final ok = await CustomDialog.showConfirmDialog(
+          context: context,
+          message:
+              'Bạn có chắc chắn muốn thanh toán tất cả sản phẩm này không?',
+        );
+        if (ok == true) {
+          await controller.checkout();
+        }
+      },
+      btnText: 'Thanh toán',
     );
   }
 

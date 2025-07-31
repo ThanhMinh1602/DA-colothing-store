@@ -35,7 +35,7 @@ class ChatBotController extends BaseController {
   RxList<MessageModel> messages = <MessageModel>[].obs;
   String conversationContext = '';
 
-  Rx<GeminiType> typeGemini = GeminiType.chat.obs;
+  Rx<GeminiType> typeGemini = GeminiType.analysic.obs;
 
   @override
   void onInit() {

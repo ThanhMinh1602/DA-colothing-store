@@ -20,7 +20,8 @@ class CustomSmallAppBar extends StatelessWidget implements PreferredSizeWidget {
   bool get _isNoIconTitle =>
       title.trim().toLowerCase() == 'giỏ hàng' ||
       title.trim().toLowerCase() == 'yêu thích' ||
-      title.trim().toLowerCase() == 'thông tin cá nhân';
+      title.trim().toLowerCase() == 'thông tin cá nhân' ||
+      title.trim().toLowerCase() == 'đơn hàng';
 
   @override
   Widget build(BuildContext context) {

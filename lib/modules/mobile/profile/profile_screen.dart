@@ -60,13 +60,17 @@ class ProfileScreen extends GetView<ProfileController> {
             _buildProfileMenu(
               icon: Icons.receipt_long,
               title: 'Đơn hàng của tôi',
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(AppRoutes.order);
+              },
             ),
 
             _buildProfileMenu(
               icon: Icons.lock_outline,
               title: 'Đổi mật khẩu',
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(AppRoutes.forgotPass, arguments: 'changePass');
+              },
             ),
             _buildProfileMenu(
               icon: Icons.info_outline,
@@ -77,6 +81,11 @@ class ProfileScreen extends GetView<ProfileController> {
                   arguments: controller.user.value,
                 );
               },
+            ),
+            _buildProfileMenu(
+              icon: Icons.payment,
+              title: 'Thêm phương thức thanh toán',
+              onTap: () {},
             ),
             const SizedBox(height: 32),
             CustomButton(

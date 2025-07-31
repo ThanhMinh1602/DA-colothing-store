@@ -83,28 +83,34 @@ class CartController extends BaseController {
       await showError(message: 'Không lấy được thông tin tài khoản!');
       return;
     }
-
-    final orderId = const Uuid().v4();
-    final order = OrderModel(
-      id: orderId,
-      userId: user.id,
-      items: List<CartItemModel>.from(cartItems),
-      total: total,
-      createdAt: DateTime.now(),
-      status: 'pending',
-      receiverName: user.name,
-      receiverPhone: user.phone ?? '',
-      shippingAddress: user.address ?? '',
-    );
-    showLoading();
-    try {
-      await _orderService.createOrder(order);
-      await _cartService.clearCart();
-      hideLoading();
-      await showSuccess(message: 'Thanh toán thành công!');
-    } catch (e) {
-      hideLoading();
-      await showError(message: e.toString());
+    if (user.phone == null || user.address == null || user.address!.isEmpty) {
+      showInfo(
+        message:
+            'Vui lòng cập nhật thông tin thanh toán trong trang cá nhân trước khi thanh toán.',
+      );
+    } else {
+      final orderId = const Uuid().v4();
+      final order = OrderModel(
+        id: orderId,
+        userId: user.id,
+        items: List<CartItemModel>.from(cartItems),
+        total: total,
+        createdAt: DateTime.now(),
+        status: 'pending',
+        receiverName: user.name,
+        receiverPhone: user.phone ?? '',
+        shippingAddress: user.address ?? '',
+      );
+      showLoading();
+      try {
+        await _orderService.createOrder(order);
+        await _cartService.clearCart();
+        hideLoading();
+        await showSuccess(message: 'Thanh toán thành công!');
+      } catch (e) {
+        hideLoading();
+        await showError(message: e.toString());
+      }
     }
   }
 }

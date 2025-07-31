@@ -10,6 +10,7 @@ import 'package:male_clothing_store/core/constants/app_assets.dart';
 import 'package:male_clothing_store/core/constants/app_color.dart';
 import 'package:male_clothing_store/core/constants/app_style.dart';
 import 'package:male_clothing_store/core/extension/build_context_extension.dart';
+import 'package:male_clothing_store/core/extension/string_extension.dart';
 import 'product_detail_controller.dart';
 
 class ProductDetailView extends StatelessWidget {
@@ -49,17 +50,8 @@ class ProductDetailView extends StatelessWidget {
                 ),
                 const SizedBox(width: 8.0),
                 CustomText(
-                  'Add to Cart | ${product.price}₫',
+                  'Add to Cart | ${product.price.toString().formatAsVND()}',
                   style: AppStyle.buttonText,
-                ),
-                const SizedBox(width: 4.0),
-
-                CustomText(
-                  '${'product.oldPrice'}₫',
-                  style: AppStyle.bodySmall10.copyWith(
-                    color: AppColor.kFDFDFD,
-                    decoration: TextDecoration.lineThrough,
-                  ),
                 ),
               ],
             ),

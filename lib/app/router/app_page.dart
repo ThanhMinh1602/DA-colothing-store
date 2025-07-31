@@ -12,6 +12,8 @@ import 'package:male_clothing_store/modules/mobile/login/login_binding.dart';
 import 'package:male_clothing_store/modules/mobile/login/login_view.dart';
 import 'package:male_clothing_store/modules/mobile/main/main_binding.dart';
 import 'package:male_clothing_store/modules/mobile/main/main_view.dart';
+import 'package:male_clothing_store/modules/mobile/order/order_binding.dart';
+import 'package:male_clothing_store/modules/mobile/order/order_view.dart';
 import 'package:male_clothing_store/modules/mobile/product-detail/product_detail_binding.dart';
 import 'package:male_clothing_store/modules/mobile/product-detail/product_detail_view.dart';
 import 'package:male_clothing_store/modules/mobile/profile-edit/profile_edit_binding.dart';
@@ -68,7 +70,11 @@ class AppPages {
       page: () => ProfileEditScreen(),
       binding: ProfileEditBinding(),
     ),
-
+    GetPage(
+      name: AppRoutes.order, // This is the route to the OrderView screen
+      page: () => const OrderView(),
+      binding: OrderBinding(),
+    ),
     GetPage(
       name: AppRoutes.main,
       page: () => const MainView(),

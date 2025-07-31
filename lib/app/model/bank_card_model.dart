@@ -17,12 +17,7 @@ final List<BankCardModel> bankCards = [
     bankIcon:
         'https://ruybangphuonghoang.com/wp-content/uploads/2024/10/VIETCOMBANKLOGO-1240x800.jpg',
   ),
-  BankCardModel(
-    id: '2',
-    bankNumber: '**** **** **** 7890',
-    bankIcon:
-        'https://pay2s.vn/blog/wp-content/uploads/2024/11/logo-techcombank-pay2s.png',
-  ),
+
   BankCardModel(
     id: '3',
     bankNumber: '**** **** **** 6321',

@@ -28,8 +28,7 @@ void main() async {
     ..backgroundColor = Colors.white
     ..indicatorColor = AppColor.primary
     ..textColor = AppColor.primary
-    ..userInteractions = false
-    ..dismissOnTap = false;
+    ..userInteractions = false;
 
   runApp(
     GetMaterialApp(

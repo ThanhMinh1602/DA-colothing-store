@@ -11,15 +11,12 @@ class ProductCartItem extends StatelessWidget {
   final String category;
   final String price;
 
-  // Dùng cho giỏ hàng
   final int? quantity;
   final ValueChanged<int>? onQuantityChanged;
 
-  // Dùng cho yêu thích
   final bool isFavourite;
   final VoidCallback? onFavouriteTap;
 
-  // Menu thao tác thêm
   final VoidCallback? onMenuTap;
 
   const ProductCartItem({
@@ -69,7 +66,6 @@ class ProductCartItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Trái tim hoặc menu tuỳ chế độ
               isFavourite
                   ? IconButton(
                       icon: Icon(Icons.favorite, color: Colors.red.shade400),
@@ -80,13 +76,11 @@ class ProductCartItem extends StatelessWidget {
                       onTap: onMenuTap,
                       child: SvgPicture.asset(AppAssets.menu1),
                     ),
-              // Stepper hoặc bỏ trống nếu là favourite
+
               if (!isFavourite && quantity != null && onQuantityChanged != null)
                 QuantityStepper(value: quantity!, onChanged: onQuantityChanged!)
               else if (isFavourite)
-                const SizedBox(
-                  height: 24,
-                ), // padding cho đẹp, tránh lệnh layout
+                const SizedBox(height: 24),
             ],
           ),
         ],
