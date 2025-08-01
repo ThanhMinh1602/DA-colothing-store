@@ -36,7 +36,7 @@ class WebRouter {
   static const orderManager = '/orders';
   static const orderDetail = '/orders/:id';
 
-  // Customer Management (tuỳ bạn có làm không)
+  // User Management
   static const customerManager = '/customers';
   static const customerDetail = '/customers/:id';
 

@@ -58,6 +58,11 @@ class CustomSidebar extends StatelessWidget {
       route: WebRouter.orderManager,
     ),
     SidebarMenuItem(
+      icon: Icons.person,
+      title: "Khách hàng",
+      route: WebRouter.customerManager,
+    ),
+    SidebarMenuItem(
       icon: Icons.chat,
       title: "Chat bot",
       route: WebRouter.chatBot,

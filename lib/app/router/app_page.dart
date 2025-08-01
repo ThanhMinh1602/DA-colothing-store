@@ -30,6 +30,8 @@ import 'package:male_clothing_store/modules/web-admin/category-manager/category_
 import 'package:male_clothing_store/modules/web-admin/category-manager/category_manager_page.dart';
 import 'package:male_clothing_store/modules/web-admin/chat-bot/chat_bot_bingding.dart';
 import 'package:male_clothing_store/modules/web-admin/chat-bot/chat_bot_page.dart';
+import 'package:male_clothing_store/modules/web-admin/customer-magager/customer_manager_binding.dart';
+import 'package:male_clothing_store/modules/web-admin/customer-magager/customer_manager_page.dart';
 import 'package:male_clothing_store/modules/web-admin/dash-board/dash_board_binding.dart';
 import 'package:male_clothing_store/modules/web-admin/dash-board/dash_board_page.dart';
 import 'package:male_clothing_store/modules/web-admin/login/web_login_binding.dart';
@@ -133,6 +135,11 @@ class WebPage {
       name: WebRouter.orderManager,
       page: () => OrderManagerPage(),
       binding: OrderManagerBinding(),
+    ),
+    GetPage(
+      name: WebRouter.customerManager,
+      page: () => CustomerManagerPage(),
+      binding: CustomerManagerBinding(),
     ),
     GetPage(
       name: WebRouter.chatBot,

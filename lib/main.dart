@@ -29,7 +29,6 @@ void main() async {
     ..indicatorColor = AppColor.primary
     ..textColor = AppColor.primary
     ..userInteractions = false;
-
   runApp(
     GetMaterialApp(
       title: 'M Clothing Store',
